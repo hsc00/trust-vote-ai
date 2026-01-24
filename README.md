@@ -11,7 +11,7 @@ This project is in its **initial architecture phase**. I'm currently documenting
 ## Project Documentation
 
 All architectural decisions and engineering logs are hosted on our GitHub Pages site:
-**[https://<teu-user>.github.io/trust-vote-ai/]**
+https://hsc00.github.io/trust-vote-ai/
 
 ### Key Principles
 
