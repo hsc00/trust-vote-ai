@@ -1,25 +1,23 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
   name: "TrustVote AI"
   text: "High-Integrity Decision Engine"
-  tagline: My great project tagline
+  tagline: Infrastructure for transparent voting and AI legislative analysis.
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Architecture Decisions
+      link: /architecture/1-documentation-stack
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Engineering Logs
+      link: /logs/1-dependency-security
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Transparency
+    details: Every technical decision is documented via ADRs to ensure long-term accountability.
+  - title: AI Integrity
+    details: Using RAG to ground legislative analysis in actual legal texts, preventing hallucinations.
+  - title: Security-First
+    details: Zero-vulnerability policy and automated quality gates in our CI/CD pipeline.
 ---
-
