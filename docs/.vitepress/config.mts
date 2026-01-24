@@ -19,6 +19,10 @@ export default defineConfig({
             text: "1. Documentation Stack",
             link: "/architecture/1-documentation-stack",
           },
+          {
+            text: "2. Licensing Strategy",
+            link: "/architecture/3-licensing-strategy",
+          },
         ],
       },
       {

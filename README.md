@@ -31,3 +31,8 @@ This project is in its **initial architecture phase**. I'm currently documenting
 ---
 
 _Note: This is an open-research project. Technical rigor precedes feature development._
+
+## License
+
+Copyright © 2026 TrustVote AI. All rights reserved.
+This project is proprietary. Unauthorized use, reproduction, or distribution is strictly prohibited.
