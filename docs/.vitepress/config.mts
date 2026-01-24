@@ -23,6 +23,10 @@ export default defineConfig({
             text: "2. Licensing Strategy",
             link: "/architecture/3-licensing-strategy",
           },
+          {
+            text: "3. Branching Strategy",
+            link: "/architecture/3-branching-strategy",
+          },
         ],
       },
       {
