@@ -27,6 +27,10 @@ export default defineConfig({
             text: "3. Branching Strategy",
             link: "/architecture/3-branching-strategy",
           },
+          {
+            text: "4. Runtime & Language",
+            link: "/architecture/4-runtime-language",
+          },
         ],
       },
       {
@@ -35,6 +39,10 @@ export default defineConfig({
           {
             text: "1. Dependency Security",
             link: "/logs/1-dependency-security",
+          },
+          {
+            text: "2. CI/CD Pipeline Fixes",
+            link: "/logs/2-github-actions-pages-pipeline",
           },
         ],
       },
