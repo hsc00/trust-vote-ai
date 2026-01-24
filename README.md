@@ -20,7 +20,7 @@ This project is in its **initial architecture phase**. I'm currently documenting
 
 - [x] Initialize Documentation Stack (VitePress)
 - [x] Resolve initial security vulnerabilities (Audit/Overrides)
-- [ ] Define Core Technology Stack (Database, AI, Backend)
+- [x] ADR 1-5: Stack Core defined (VitePress, License, Branching, TS/Node, NestJS).
 - [ ] Setup CI/CD Pipeline and Quality Gates
 
 ## Structure

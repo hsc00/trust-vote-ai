@@ -21,7 +21,19 @@ export default defineConfig({
           },
           {
             text: "2. Licensing Strategy",
-            link: "/architecture/3-licensing-strategy",
+            link: "/architecture/2-licensing-strategy",
+          },
+          {
+            text: "3. Branching Strategy",
+            link: "/architecture/3-branching-strategy",
+          },
+          {
+            text: "4. Runtime & Language",
+            link: "/architecture/4-runtime-language",
+          },
+          {
+            text: "5. Backend Framework",
+            link: "/architecture/5-backend-framework",
           },
         ],
       },
@@ -31,6 +43,10 @@ export default defineConfig({
           {
             text: "1. Dependency Security",
             link: "/logs/1-dependency-security",
+          },
+          {
+            text: "2. CI/CD Pipeline Fixes",
+            link: "/logs/2-github-actions-pages-pipeline",
           },
         ],
       },
