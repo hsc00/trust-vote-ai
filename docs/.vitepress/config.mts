@@ -21,7 +21,7 @@ export default defineConfig({
           },
           {
             text: "2. Licensing Strategy",
-            link: "/architecture/3-licensing-strategy",
+            link: "/architecture/2-licensing-strategy",
           },
           {
             text: "3. Branching Strategy",
@@ -30,6 +30,10 @@ export default defineConfig({
           {
             text: "4. Runtime & Language",
             link: "/architecture/4-runtime-language",
+          },
+          {
+            text: "5. Backend Framework",
+            link: "/architecture/5-backend-framework",
           },
         ],
       },
