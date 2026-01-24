@@ -1,9 +1,5 @@
 # Architectural Decision 2: Licensing & IP Protection
 
-## Status
-
-Accepted
-
 ## Context
 
 The project is hosted in a public repository for transparency and ease of deployment (GitHub Pages). However, the core logic and concept are proprietary intellectual property.
