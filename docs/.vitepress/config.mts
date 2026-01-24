@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 
 export default defineConfig({
+  base: "/trust-vote-ai/",
   title: "TrustVote AI",
   description: "High-Integrity Decision Engine",
   themeConfig: {
