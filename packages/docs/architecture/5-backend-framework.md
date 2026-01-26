@@ -1,4 +1,4 @@
-# Architectural Decision 5: Backend Framework Selection
+# Backend Framework Selection
 
 ## Context
 

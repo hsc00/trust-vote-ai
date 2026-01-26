@@ -1,4 +1,4 @@
-# Architectural Decision 1: Documentation Stack
+# Documentation Stack
 
 ## Context
 

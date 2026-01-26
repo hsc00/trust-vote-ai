@@ -1,4 +1,4 @@
-# Architectural Decision 3: Branching Strategy
+# Branching Strategy
 
 ## Context
 

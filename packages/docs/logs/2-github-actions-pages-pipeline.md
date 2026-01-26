@@ -1,4 +1,4 @@
-# Engineering Log 2: GitHub Actions & Pages Pipeline
+# GitHub Actions & Pages Pipeline
 
 **Date:** 2026-01-24
 

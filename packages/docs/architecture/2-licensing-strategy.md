@@ -1,4 +1,4 @@
-# Architectural Decision 2: Licensing & IP Protection
+# Licensing
 
 ## Context
 

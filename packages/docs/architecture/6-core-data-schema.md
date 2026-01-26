@@ -1,4 +1,4 @@
-# Architectural Decision 6: Core Data Schema
+# Core Data Schema
 
 ## Context
 

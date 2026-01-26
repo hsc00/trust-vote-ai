@@ -1,4 +1,4 @@
-# Architectural Decision 8: Repository Strategy
+# Repository Strategy
 
 ## Context
 
