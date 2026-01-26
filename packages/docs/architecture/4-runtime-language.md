@@ -1,4 +1,4 @@
-# Architectural Decision 4: Backend Technology Selection
+# Backend Technology Selection
 
 ## Context
 

@@ -1,4 +1,4 @@
-# Architectural Decision 7: Quality Gates & CI/CD Pipeline
+# Quality Gates & CI/CD Pipeline
 
 ## Context
 
