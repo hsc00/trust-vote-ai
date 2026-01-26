@@ -2,8 +2,8 @@
 layout: home
 
 hero:
-  name: "TrustVote AI"
-  text: "High-Integrity Decision Engine"
+  name: 'TrustVote AI'
+  text: 'High-Integrity Decision Engine'
   tagline: Infrastructure for transparent voting and AI legislative analysis.
   actions:
     - theme: brand

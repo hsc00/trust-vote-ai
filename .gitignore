@@ -3,8 +3,8 @@ node_modules/
 .pnpm-store/
 
 # VitePress / Build output
-docs/.vitepress/dist
-docs/.vitepress/cache
+packages/docs/.vitepress/dist
+packages/docs/.vitepress/cache
 
 # OS Files
 .DS_Store
@@ -19,3 +19,5 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+*.pem
+*.key
