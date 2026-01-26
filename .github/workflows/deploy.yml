@@ -6,21 +6,19 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -30,6 +28,10 @@ jobs:
     needs: sonarcloud
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -46,6 +48,9 @@ jobs:
   deploy:
     needs: build-and-deploy
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
