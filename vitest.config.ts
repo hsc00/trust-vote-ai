@@ -1,18 +1,22 @@
-import { defineConfig } from 'vite';
-import { configDefaults } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vite';
+import { defineConfig as defineVitestConfig } from 'vitest/config';
 import swc from 'unplugin-swc';
+import path from 'node:path';
 
-export default defineConfig({
-  test: {
-    globals: false,
-    environment: 'node',
-    include: ['src/**/*.spec.ts'],
-    exclude: [...configDefaults.exclude],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'lcov'],
-      reportsDirectory: './coverage',
+export default mergeConfig(
+  defineConfig({
+    plugins: [swc.vite()],
+  }),
+  defineVitestConfig({
+    test: {
+      globals: false,
+      environment: 'node',
+      include: ['src/**/*.spec.ts', 'packages/*/src/**/*.spec.ts'],
+      coverage: {
+        provider: 'v8',
+        reporter: ['lcov', 'text'],
+        reportsDirectory: path.resolve(__dirname, './coverage'),
+      },
     },
-  },
-  plugins: [swc.vite()],
-});
+  }),
+);

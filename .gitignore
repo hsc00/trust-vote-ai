@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
+dist/
 .pnpm-store/
+
+# Test Coverage
+coverage/
 
 # VitePress / Build output
 packages/docs/.vitepress/dist
