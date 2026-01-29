@@ -26,10 +26,10 @@ The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring co
 
 ## Engineering Logs
 
-We maintain a rigorous record of the project's evolution:
+I maintain a rigorous record of the project's evolution:
 
-- **[Architectural Decision Records (ADRs)](packages/docs/adr/):** Core stack and design decisions.
-- **[Engineering Journals](packages/docs/logs/):** Detailed logs of infrastructure setup and incident resolution.
+- **[Architectural Decision Records (ADRs)](https://hsc00.github.io/trust-vote-ai/architecture/1-documentation-stack):** Core stack and design decisions.
+- **[Engineering Journals](https://hsc00.github.io/trust-vote-ai/logs/1-dependency-security):** Detailed logs of infrastructure setup and incident resolution.
 
 ## 🚀 Initial Roadmap
 
@@ -37,7 +37,7 @@ We maintain a rigorous record of the project's evolution:
 - [x] Resolve initial security vulnerabilities (Audit/Overrides)
 - [x] ADR 1-5: Stack Core defined (VitePress, License, Branching, TS/Node, NestJS).
 - [x] Setup CI/CD Pipeline and Quality Gates (SonarCloud & GitGuardian)
-- [ ] Initialize Backend Core Service (NestJS)
+- [x] Initialize Backend Core Service (NestJS)
 - [ ] Database Schema & PostgreSQL Docker Setup
 
 ---
