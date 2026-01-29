@@ -1,9 +1,8 @@
 {
   "name": "trust-vote-ai",
   "version": "1.0.0",
-  "description": "AI-powered legislative analysis and voting platform",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "workspaces": [
     "packages/*"
   ],
@@ -12,28 +11,33 @@
     "docs:dev": "npm run dev -w @trust-vote-ai/docs",
     "docs:build": "npm run build -w @trust-vote-ai/docs",
     "lint": "eslint \"packages/**/*.{ts,js,mts}\" --fix",
+    "test": "vitest run",
+    "test:backend": "npm run test -w @trust-vote/backend",
+    "test:frontend": "npm run test -w @trust-vote/frontend",
     "format": "prettier --write \"packages/**/*.{ts,js,mts,md,json}\""
   },
   "lint-staged": {
-    "*.{ts,js,mts}": [
+    "packages/**/*.{ts,js,mts}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "vitest related --run"
     ],
-    "*.{md,json}": [
+    "**/*.{md,json}": [
       "prettier --write"
     ]
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "unplugin-swc": "^1.5.9",
+    "vitest": "^4.0.18"
   },
   "overrides": {
     "esbuild": "0.25.0"
