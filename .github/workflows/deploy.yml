@@ -14,7 +14,8 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
 
@@ -27,8 +28,11 @@ jobs:
       - name: Security Audit
         run: npm audit --audit-level=high
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Secure Install (No Scripts)
+        run: npm ci --ignore-scripts
+
+      - name: Controlled Rebuild
+        run: npm rebuild esbuild swc @nestjs/core
 
       - name: Run Backend Tests with Coverage
         run: npm run test:backend -- --coverage.enabled=true --coverage.reporter=lcov
@@ -40,7 +44,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.javascript.node.maxLightweightScan=true
+            -Dsonar.javascript.lcov.reportPaths=packages/backend/coverage/lcov.info
+            -Dsonar.sources=packages/backend/src
+            -Dsonar.tests=packages/backend/src
+            -Dsonar.test.inclusions=**/*.spec.ts
+
   build-and-deploy:
     name: Build & Deploy Docs
     needs: sonarcloud
@@ -56,7 +64,8 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci
+      - name: Secure Install for Docs
+        run: npm ci --ignore-scripts && npm rebuild esbuild
       - run: npm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -71,5 +80,4 @@ jobs:
       id-token: write
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
