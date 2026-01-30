@@ -1,0 +1,27 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: trust-vote-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: trust_password_2026
+      POSTGRES_DB: trust_vote
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d trust_vote']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: trust-vote-redis
+    ports:
+      - '6379:6379'
+
+volumes:
+  pgdata:

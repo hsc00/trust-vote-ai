@@ -6,7 +6,7 @@ Even as a solo developer, the project requires a structured way to integrate cod
 
 ## Decision
 
-I will use a **Feature Branch Workflow** with self-reviewed Pull Requests.
+We will use a **Feature Branch Workflow** with self-reviewed Pull Requests.
 
 ## Strategy Details
 

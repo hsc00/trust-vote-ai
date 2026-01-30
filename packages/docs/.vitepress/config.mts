@@ -47,6 +47,14 @@ export default defineConfig({
             text: '8. Repository Strategy',
             link: '/architecture/8-repository-strategy',
           },
+          {
+            text: '9. Testing Framework Selection',
+            link: '/architecture/9-testing-framework-selection',
+          },
+          {
+            text: '10. Quantum Resistant Integrity Strategy',
+            link: '/architecture/10-quantum-resistant-integrity-strategy',
+          },
         ],
       },
       {
@@ -63,6 +71,18 @@ export default defineConfig({
           {
             text: '3. Monorepo Transition & Quality Gates Implementation',
             link: '/logs/3-monorepo-quality-setup',
+          },
+          {
+            text: '4. Backend Infrastructure Setup',
+            link: '/logs/4-backend-infrastructure-setup',
+          },
+          {
+            text: '5.Testing & Quality Infrastructure',
+            link: '/logs/5-testing-infrastructure-setup',
+          },
+          {
+            text: '6.Database Persistence & Vector Engine Setup',
+            link: '/logs/6-db-persistence-vector-engine-setup',
           },
         ],
       },

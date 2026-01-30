@@ -5,8 +5,7 @@ import { AppModule } from './app.module';
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
 const port = process.env.PORT || 3000;
-
-await app.listen(port, '0.0.0.0');
+await app.listen(port);
 
 console.log(`\n🚀 TrustVote AI Backend is active`);
 console.log(`📡 URL: http://localhost:${port}\n`);
