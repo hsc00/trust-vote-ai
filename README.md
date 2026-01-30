@@ -23,6 +23,7 @@ The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring co
 - **Git Hooks:** Husky + lint-staged for pre-commit linting (ESLint 9 / Prettier).
 - **CI/CD:** GitHub Actions for automated testing and documentation deployment.
 - **Branch Protection:** Strict Rulesets requiring successful status checks before merging.
+- **Cryptographic Integrity**: SHA3-512 Hashing (NIST FIPS 202) for quantum resistant data sealing and Merkle Tree auditing.
 
 ### Infrastructure & Persistence
 
@@ -47,6 +48,7 @@ We maintain a rigorous record of the project's evolution:
 - [x] Setup CI/CD Pipeline and Quality Gates (SonarCloud & GitGuardian)
 - [x] Initialize Backend Core Service (NestJS)
 - [x] Database Schema & PostgreSQL Docker Setup (pgvector)
+- [x] Secure Voting Engine Implementation (SHA3-512 & Merkle Tree Integrity)
 - [ ] Implement RAG (Retrieval-Augmented Generation) for Legislative Analysis
 - [ ] Secure Voting Engine Implementation (Hash-based integrity)
 

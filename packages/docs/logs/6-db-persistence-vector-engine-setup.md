@@ -1,10 +1,10 @@
-# Log 6: Database Persistence & Vector Engine Setup
+# Database Persistence, Vector Engine & Quantum-Resistant Foundation
 
 **Date:** 2026-01-30
 
 ## Context
 
-After establishing the CI/CD pipeline, the focus shifted to building the data foundation. The goal was to implement a schema capable of handling both traditional relational data (votes, documents) and high-dimensional vectors for AI-powered semantic analysis.
+After establishing the CI/CD pipeline, the focus shifted to building the data foundation. The goal was to implement a schema capable of handling both traditional relational data (votes, documents) and high-dimensional vectors for AI-powered semantic analysis, while ensuring decadal-scale cryptographic integrity.
 
 ## Actions Taken
 
@@ -16,23 +16,26 @@ After establishing the CI/CD pipeline, the focus shifted to building the data fo
    - Integrated **Drizzle ORM** as a lightweight, type-safe alternative to Prisma, optimized for the NestJS/Fastify engine.
    - Configured `drizzle-kit` for automated schema synchronization and migrations.
 
-3. **Core Schema Materialization:**
+3. **Core Schema Materialization & Refactor:**
    - **`legislative_docs`**: Central storage for law proposals.
-   - **`doc_chunks_embeddings`**: Dedicated table for RAG (Retrieval-Augmented Generation), featuring a 1536 dimension vector column compatible with standard embedding models.
-   - **`votes`**: High-integrity table with SHA-256 hash support to ensure record immutability.
+   - **`doc_chunks_embeddings`**: Dedicated table for RAG (Retrieval-Augmented Generation), featuring a 1536-dimension vector column.
+   - **`votes`**: High-integrity table. Successfully refactored the `hash` columns from 64 to 128 characters to support **SHA3-512**.
 
-4. **Environment Security:**
-   - Established a strict `.env` / `.env.example` strategy to protect database credentials, ensuring no sensitive data is committed to the repository.
+4. **Security Implementation (Post-Quantum Readiness):**
+   - Developed a global `SecurityService` utilizing Node's native `crypto` module.
+   - Implemented **SHA3-512** hashing to mitigate risks from Grover's Algorithm.
+   - Implemented a recursive **Merkle Tree** generator (`generateMerkleRoot`) to enable efficient, high-integrity auditing of voting blocks.
 
 ## Technical Resolution: The "Vector" Type Error
 
 During the initial schema push, an error occurred because PostgreSQL did not recognize the `vector` type.
 
 - **Root Cause:** The `pgvector` extension was present in the Docker image but not activated in the specific database instance.
-- **Fix:** Manually executed `CREATE EXTENSION IF NOT EXISTS vector;`. For long-term reliability, a persistent initialization script was added to the Docker setup to automate this process in fresh environments.
+- **Fix:** Manually executed `CREATE EXTENSION IF NOT EXISTS vector;` and added a persistent initialization script to the Docker configuration.
 
 ## Status
 
 - **Database Engine:** Operational (Docker).
-- **Schema:** Synced and verified via `drizzle-kit push`.
-- **Persistence:** Global `DbModule` ready for injection into NestJS services.
+- **Schema:** Synced and verified via `drizzle-kit push` (128-char hash support).
+- **Security Logic:** `SecurityService` verified and ready for production-grade hashing.
+- **Persistence:** Global `DbModule` fully integrated into the NestJS core.
