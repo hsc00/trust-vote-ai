@@ -1,26 +1,34 @@
-# Log 5: Testing Infrastructure Setup
+# Log 5: Testing & Quality Infrastructure (CI/CD)
 
 **Date:** 2026-01-29
 
 ## Context
 
-Implemented a centralized testing strategy to ensure the "Rating A" on SonarCloud and the long-term reliability of the voting engine.
+Implemented a centralized testing and automated quality strategy to ensure "Rating A" on SonarCloud and the long-term reliability of the TrustVote AI voting engine.
 
 ## Actions Taken
 
-1. **Centralization:** Installed `vitest`, `unplugin-swc`, and `@vitest/coverage-v8` at the monorepo root.
-2. **Backend Configuration:** - Created `packages/backend/vitest.config.ts` using `unplugin-swc` to compile NestJS decorators.
-   - Set `globals: false` to enforce explicit test imports, enhancing code clarity.
-3. **Health Check:** Created the first integration test for `AppController` to validate the setup.
-4. **Scripts:** Added `test` command to the root `package.json` to enable project-wide testing.
-5. Integrated **Vitest** with **Husky** and **lint-staged**.
-6. Commits are now blocked if tests related to the changed files do not pass (`vitest related --run`).
+1. **Centralization:** Installed `vitest`, `unplugin-swc`, and `@vitest/coverage-v8` at the monorepo root to maintain a single source of truth for testing tools.
+2. **Unified Configuration:**
+   - Implemented a root `vitest.config.ts` using `mergeConfig` to resolve TypeScript conflicts between Vite and Vitest.
+   - Configured `unplugin-swc` to handle NestJS decorators with high-performance compilation, replacing the slower `ts-jest`.
+   - Set `reportsDirectory: './coverage'` at the root to ensure consistent report ingestion by external tools.
+3. **CI/CD Pipeline (GitHub Actions):**
+   - Developed a secure workflow using `npm ci --ignore-scripts` followed by a controlled `npm rebuild` for trusted binaries (`esbuild`, `swc`).
+   - Integrated **SonarCloud Scan** with precise path mapping (`-Dsonar.sources=packages/backend/src`) to link coverage reports with monorepo structure.
+4. **Git Hooks:** Integrated **Husky** and **lint-staged** to enforce a "no-broken-tests" policy at the commit level using `vitest related --run`.
 
-## Technical Resolution: Decorators in Vitest
+## Technical Resolution: Path Mapping & Coverage
 
-The main challenge was making Vitest understand NestJS decorators without using the heavy `ts-jest`. This was resolved by using `unplugin-swc`, which is the 2026 standard for fast TS compilation.
+The main challenge was the "Zero Coverage" reporting in the SonarCloud dashboard. This was resolved by:
+
+- Executing tests from the root context (`vitest run packages/backend`) instead of the workspace context.
+- Adjusting `sonar-project.properties` to map the `lcov.info` file correctly to the monorepo source paths.
+- Resolving TypeScript `defineConfig` overloads by using `vitest/config` explicit typing.
 
 ## Status
 
-- All tests passing.
-- Test coverage reporting is ready for SonarCloud integration.
+- **CI/CD:** Fully operational and secure.
+- **Tests:** All integration tests passing.
+- **Quality Gate:** Reporting pipeline active; metrics will scale as domain logic grows.
+- **Next Step:** Infrastructure deployment via Docker Compose.

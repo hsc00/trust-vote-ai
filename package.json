@@ -12,7 +12,7 @@
     "docs:build": "npm run build -w @trust-vote-ai/docs",
     "lint": "eslint \"packages/**/*.{ts,js,mts}\" --fix",
     "test": "vitest run",
-    "test:backend": "npm run test -w @trust-vote/backend",
+    "test:backend": "vitest run packages/backend --coverage",
     "test:frontend": "npm run test -w @trust-vote/frontend",
     "format": "prettier --write \"packages/**/*.{ts,js,mts,md,json}\""
   },
@@ -37,9 +37,11 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "unplugin-swc": "^1.5.9",
+    "vite": "^6.0.0",
     "vitest": "^4.0.18"
   },
   "overrides": {
-    "esbuild": "0.25.0"
+    "esbuild": "0.25.0",
+    "vite": "^6.0.0"
   }
 }
