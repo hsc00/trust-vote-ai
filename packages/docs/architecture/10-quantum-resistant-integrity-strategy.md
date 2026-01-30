@@ -31,8 +31,6 @@ We will implement **SHA3-512** for all document and vote hashing. Furthermore, w
 - **Node.js Integration:** We will leverage the native `node:crypto` module, ensuring zero external dependencies for our core security logic.
 - **CPU Overhead:** While SHA-3 is slightly more CPU-intensive than SHA-256, the high-throughput nature of the **Fastify** engine and modern server hardware renders the latency impact negligible.
 
----
-
 ## Next Steps
 
 - Refactor `schema.ts` to support 512-bit hashes.
