@@ -12,7 +12,7 @@
     "docs:build": "npm run build -w @trust-vote-ai/docs",
     "lint": "eslint \"packages/**/*.{ts,js,mts}\" --fix",
     "test": "vitest run",
-    "test:backend": "npm run test -w @trust-vote/backend",
+    "test:backend": "vitest run packages/backend --coverage",
     "test:frontend": "npm run test -w @trust-vote/frontend",
     "format": "prettier --write \"packages/**/*.{ts,js,mts,md,json}\""
   },

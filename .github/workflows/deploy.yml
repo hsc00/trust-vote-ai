@@ -35,7 +35,7 @@ jobs:
         run: npm rebuild esbuild swc @nestjs/core
 
       - name: Run Backend Tests with Coverage
-        run: npm run test:backend -- --coverage
+        run: npm run test:backend
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@0303d6b62e310685c0e34d0b9cde218036885c4d
@@ -44,10 +44,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.sources=packages/backend/src
-            -Dsonar.tests=packages/backend/src
-            -Dsonar.test.inclusions=**/*.spec.ts
             -Dsonar.verbose=true
 
   build-and-deploy:
