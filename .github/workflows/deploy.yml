@@ -44,10 +44,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.javascript.lcov.reportPaths=packages/backend/coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.sources=packages/backend/src
             -Dsonar.tests=packages/backend/src
             -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.verbose=true
 
   build-and-deploy:
     name: Build & Deploy Docs
