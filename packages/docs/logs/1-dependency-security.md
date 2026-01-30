@@ -16,7 +16,7 @@ The default suggestion from the package manager was `npm audit fix --force`, whi
 
 ## The Solution: Manual Override
 
-Instead of a destructive downgrade, I implemented an **npm override** to force the usage of `esbuild@0.25.0`, which contains the security patch, while maintaining our modern VitePress stack.
+Instead of a destructive downgrade, We implemented an **npm override** to force the usage of `esbuild@0.25.0`, which contains the security patch, while maintaining our modern VitePress stack.
 
 ```json
 // package.json

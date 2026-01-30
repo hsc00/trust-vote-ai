@@ -39,6 +39,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "unplugin-swc": "^1.5.9",
+    "vite": "^6.0.0",
     "vitest": "^4.0.18"
   },
   "overrides": {
