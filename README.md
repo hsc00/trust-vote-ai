@@ -31,7 +31,7 @@ I maintain a rigorous record of the project's evolution:
 - **[Architectural Decision Records (ADRs)](https://hsc00.github.io/trust-vote-ai/architecture/1-documentation-stack):** Core stack and design decisions.
 - **[Engineering Journals](https://hsc00.github.io/trust-vote-ai/logs/1-dependency-security):** Detailed logs of infrastructure setup and incident resolution.
 
-## 🚀 Initial Roadmap
+## Initial Roadmap
 
 - [x] Initialize Documentation Stack (VitePress)
 - [x] Resolve initial security vulnerabilities (Audit/Overrides)
