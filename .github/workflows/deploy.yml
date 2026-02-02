@@ -2,7 +2,7 @@ name: CI/CD & Quality
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, develop]
@@ -49,7 +49,6 @@ jobs:
   build-and-deploy:
     name: Build & Deploy Docs
     needs: quality-gate
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
