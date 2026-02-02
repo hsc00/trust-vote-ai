@@ -1,1 +1,1 @@
-npx lint-staged
+node scripts/validate-git.mjs && npx lint-staged
