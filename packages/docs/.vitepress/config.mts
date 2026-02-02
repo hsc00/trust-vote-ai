@@ -55,6 +55,10 @@ export default defineConfig({
             text: '10. Quantum Resistant Integrity Strategy',
             link: '/architecture/10-quantum-resistant-integrity-strategy',
           },
+          {
+            text: '11. Dependency Management and Vulnerability Scanning',
+            link: '11-dependency-management-vulnerability-scanning',
+          },
         ],
       },
       {
