@@ -2,7 +2,7 @@ name: CI/CD & Quality
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -50,7 +51,7 @@ jobs:
     name: Build & Deploy Docs
     needs: sonarcloud
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       pages: write
@@ -72,6 +73,7 @@ jobs:
   deploy:
     needs: build-and-deploy
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     permissions:
       pages: write
       id-token: write
