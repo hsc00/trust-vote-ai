@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:backend": "vitest run packages/backend --coverage",
     "test:frontend": "npm run test -w @trust-vote/frontend",
-    "format": "prettier --write \"packages/**/*.{ts,js,mts,md,json}\""
+    "format": "prettier --write \"packages/**/*.{ts,js,mts,md,json}\"",
+    "validate:branch": "node scripts/validate-branch.mjs"
   },
   "lint-staged": {
     "packages/**/*.{ts,js,mts}": [

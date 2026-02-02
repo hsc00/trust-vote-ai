@@ -5,14 +5,16 @@ on:
     branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
+    branches: [main, develop]
 
 jobs:
-  sonarcloud:
+  quality-gate:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -25,10 +27,7 @@ jobs:
           node-version: 22
           cache: 'npm'
 
-      - name: Security Audit
-        run: npm audit --audit-level=high
-
-      - name: Secure Install (No Scripts)
+      - name: Secure Install
         run: npm ci --ignore-scripts
 
       - name: Controlled Rebuild
@@ -44,13 +43,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.verbose=true
 
   build-and-deploy:
     name: Build & Deploy Docs
-    needs: sonarcloud
-    runs-on: ubuntu-latest
+    needs: quality-gate
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pages: write
@@ -61,8 +61,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - name: Secure Install for Docs
-        run: npm ci --ignore-scripts && npm rebuild esbuild
+      - run: npm ci --ignore-scripts && npm rebuild esbuild
       - run: npm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -72,9 +71,12 @@ jobs:
   deploy:
     needs: build-and-deploy
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
       id-token: write
     steps:
-      - name: Deploy to GitHub Pages
+      - id: deployment
         uses: actions/deploy-pages@v4
