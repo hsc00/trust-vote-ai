@@ -5,10 +5,9 @@ on:
     branches: [main, develop]
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, develop]
 
 jobs:
-  quality-gate:
+  sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
     permissions:
@@ -27,7 +26,10 @@ jobs:
           node-version: 22
           cache: 'npm'
 
-      - name: Secure Install
+      - name: Security Audit
+        run: npm audit --audit-level=high
+
+      - name: Secure Install (No Scripts)
         run: npm ci --ignore-scripts
 
       - name: Controlled Rebuild
@@ -43,13 +45,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.verbose=true
 
   build-and-deploy:
     name: Build & Deploy Docs
-    needs: quality-gate
+    needs: sonarcloud
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: read
       pages: write
@@ -60,7 +62,8 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - run: npm ci --ignore-scripts && npm rebuild esbuild
+      - name: Secure Install for Docs
+        run: npm ci --ignore-scripts && npm rebuild esbuild
       - run: npm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -70,12 +73,10 @@ jobs:
   deploy:
     needs: build-and-deploy
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    if: github.ref == 'refs/heads/main'
     permissions:
       pages: write
       id-token: write
     steps:
-      - id: deployment
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
