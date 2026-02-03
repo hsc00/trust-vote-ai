@@ -20,10 +20,10 @@ The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring co
 
 - **Static Analysis:** SonarCloud Integration (Quality Gates enforced).
 - **Secret Scanning:** GitGuardian protection.
+- **Testing:** Vitest with 100% coverage.
 - **Git Hooks:** Husky + lint-staged for pre-commit linting (ESLint 9 / Prettier).
 - **CI/CD:** GitHub Actions for automated testing and documentation deployment.
-- **Branch Protection:** Strict Rulesets requiring successful status checks before merging.
-- **Cryptographic Integrity**: SHA3-512 Hashing (NIST FIPS 202) for quantum resistant data sealing and Merkle Tree auditing.
+- **Cryptographic Integrity:** SHA3-512 Hashing (NIST FIPS 202) for quantum-resistant data sealing and Merkle Tree inclusion proofs.
 
 ### Infrastructure & Persistence
 
@@ -40,17 +40,42 @@ We maintain a rigorous record of the project's evolution:
 - **[Architectural Decision Records (ADRs)](https://hsc00.github.io/trust-vote-ai/architecture/1-documentation-stack):** Core stack and design decisions.
 - **[Engineering Journals](https://hsc00.github.io/trust-vote-ai/logs/1-dependency-security):** Detailed logs of infrastructure setup and incident resolution.
 
-## Initial Roadmap
+## Strategic Roadmap
 
-- [x] Initialize Documentation Stack (VitePress)
-- [x] Resolve initial security vulnerabilities (Audit/Overrides)
-- [x] ADR 1-5: Stack Core defined (VitePress, License, Branching, TS/Node, NestJS).
-- [x] Setup CI/CD Pipeline and Quality Gates (SonarCloud & GitGuardian)
-- [x] Initialize Backend Core Service (NestJS)
-- [x] Database Schema & PostgreSQL Docker Setup (pgvector)
-- [x] Secure Voting Engine Implementation (SHA3-512 & Merkle Tree Integrity)
-- [ ] Implement RAG (Retrieval-Augmented Generation) for Legislative Analysis
-- [ ] Secure Voting Engine Implementation (Hash-based integrity)
+### Phase 1: Foundation of Trust (Completed)
+
+_Establishing the secure baseline and cryptographic core._
+
+- [x] Initialize Documentation Stack (VitePress) & ADRs.
+- [x] Security Hardening (NPM Audit Overrides, SonarCloud, GitGuardian).
+- [x] CI/CD Pipeline Setup with Strict Quality Gates.
+- [x] Backend Core Service Initialization (NestJS + Fastify).
+- [x] Database Architecture (PostgreSQL + pgvector + Drizzle ORM).
+- [x] Secure Voting Engine: Implementation of SHA3-512 Hashing & Merkle Tree Data Structure.
+
+### Phase 2: Transparency (In Progress)
+
+_Enabling public verification of the cryptographic proofs._
+
+- [x] **Merkle Proof Generator:** Logic to extract and verify inclusion proofs.
+- [x] **Public Audit API:** Endpoint for `GET /audit/verify/:voteId` (Validated with mock context).
+- [ ] **Data Persistence:** Transition from mock contexts to Drizzle-backed Merkle sessions.
+- [ ] **Real-time Dashboard:** Frontend integration to display the current Root Hash.
+
+### Phase 3: Cognitive Intelligence (Next)
+
+_AI-driven legislative analysis using the secure document store._
+
+- [ ] **Document Ingestion Pipeline:** Parsing PDF legislation into raw text.
+- [ ] **Vector Embeddings:** Generating embeddings for legislative context using `pgvector`.
+- [ ] **RAG Implementation:** Retrieval-Augmented Generation service for answering citizen queries (e.g., "How does this bill affect privacy?").
+
+### Phase 4: Privacy & Identity (Future)
+
+_Ensuring anonymity without compromising integrity._
+
+- [ ] **Zero-Knowledge Proofs (ZKP):** Proving voter eligibility without revealing identity.
+- [ ] **Digital Identity Integration:** Connecting with Gov/OIDC providers anonymously.
 
 ---
 

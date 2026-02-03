@@ -57,7 +57,7 @@ export default defineConfig({
           },
           {
             text: '11. Dependency Management and Vulnerability Scanning',
-            link: '11-dependency-management-vulnerability-scanning',
+            link: '/architecture/11-dependency-management-vulnerability-scanning',
           },
         ],
       },
@@ -87,6 +87,10 @@ export default defineConfig({
           {
             text: '6.Database Persistence & Vector Engine Setup',
             link: '/logs/6-db-persistence-vector-engine-setup',
+          },
+          {
+            text: '7.Cryptographic Integrity',
+            link: '/logs/7-cryptographic-integrity',
           },
         ],
       },
