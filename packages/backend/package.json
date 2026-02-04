@@ -23,7 +23,7 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
-    "@nestjs/testing": "^11.1.12",
+    "@nestjs/testing": "^11.1.13",
     "@types/node": "^25.1.0",
     "@types/pg": "^8.11.11",
     "@vitest/coverage-v8": "^3.0.4",
