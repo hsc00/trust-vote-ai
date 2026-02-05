@@ -14,12 +14,13 @@ export class SecurityService {
   ) {}
 
   async persistVote(docId: string, userId: string, decision: 'yes' | 'no' | 'abstain') {
-    const payload = `${docId}-${userId}-${decision}-${Date.now()}`;
+    const timestamp = new Date();
+    const payload = `${docId}-${userId}-${decision}-${timestamp.toISOString()}`;
     const voteHash = this.crypto.hashSHA3(payload);
 
     const [newVote] = await this.db
       .insert(schema.votes)
-      .values({ docId, userId, decision, hash: voteHash })
+      .values({ docId, userId, decision, hash: voteHash, timestamp })
       .returning();
 
     return newVote;

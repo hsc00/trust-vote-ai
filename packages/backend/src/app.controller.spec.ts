@@ -78,14 +78,14 @@ describe('AppController', () => {
       );
     });
 
-    it('should throw UnprocessableEntityException if hash is not in list (Integrity check)', async () => {
+    it('should throw UnprocessableEntityException if hash integrity fails', async () => {
       vi.spyOn(securityService, 'getVoteById').mockResolvedValue(mockVote);
-      vi.spyOn(securityService, 'getHashesForDoc').mockResolvedValue(['hash-2', 'hash-3']);
+      vi.spyOn(securityService, 'getHashesForDoc').mockResolvedValue(['wrong-hash']);
 
-      await expect(appController.getVoteAudit(mockVoteId)).rejects.toThrow(
-        UnprocessableEntityException,
-      );
-      await expect(appController.getVoteAudit(mockVoteId)).rejects.toThrow(/Data integrity error/);
+      const act = () => appController.getVoteAudit(mockVoteId);
+
+      await expect(act).rejects.toThrow(UnprocessableEntityException);
+      await expect(act).rejects.toThrow(/Data integrity error/);
     });
   });
 });
