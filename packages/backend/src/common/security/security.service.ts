@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
 import { DRIZZLE } from '../../db/db.module';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../../db/schema';
@@ -41,6 +41,11 @@ export class SecurityService {
       .from(schema.votes)
       .where(eq(schema.votes.id, id))
       .limit(1);
+
+    if (!vote) {
+      throw new NotFoundException(`Vote with ID ${id} not found.`);
+    }
+
     return vote;
   }
 

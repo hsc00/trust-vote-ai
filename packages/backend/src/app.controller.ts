@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Inject } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Inject } from '@nestjs/common';
 import { SecurityService } from './common/security/security.service';
 
 @Controller('audit')
@@ -14,12 +14,8 @@ export class AppController {
   }
 
   @Get('verify/:voteId')
-  async getVoteAudit(@Param('voteId') voteId: string) {
+  async getVoteAudit(@Param('voteId', new ParseUUIDPipe({ version: '4' })) voteId: string) {
     const vote = await this.securityService.getVoteById(voteId);
-
-    if (!vote) {
-      throw new NotFoundException('Vote not found in database.');
-    }
 
     if (!vote.docId) {
       throw new Error('Vote has no document associated.');
