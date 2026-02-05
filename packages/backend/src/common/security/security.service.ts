@@ -31,7 +31,7 @@ export class SecurityService {
       .select({ hash: schema.votes.hash })
       .from(schema.votes)
       .where(eq(schema.votes.docId, docId))
-      .orderBy(schema.votes.timestamp);
+      .orderBy(schema.votes.timestamp, schema.votes.id);
 
     return allVotes.map((v) => v.hash);
   }

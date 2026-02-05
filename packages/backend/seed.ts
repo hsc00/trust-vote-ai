@@ -11,8 +11,13 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is not set');
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: databaseUrl,
 });
 
 const db = drizzle(pool, { schema });
@@ -40,9 +45,6 @@ async function seed() {
     },
   ];
 
-  await db.insert(schema.legislativeDocs).values(docs);
-  console.log('Inserted legislative docs');
-
   const votes = [
     {
       id: randomUUID(),
@@ -67,9 +69,6 @@ async function seed() {
     },
   ];
 
-  await db.insert(schema.votes).values(votes);
-  console.log('Inserted votes');
-
   const snapshot = {
     id: randomUUID(),
     docId: docs[0].id,
@@ -78,8 +77,16 @@ async function seed() {
     algorithm: 'SHA3-512',
   };
 
-  await db.insert(schema.merkleSnapshots).values(snapshot);
-  console.log('Inserted merkle snapshot');
+  await db.transaction(async (tx) => {
+    await tx.insert(schema.legislativeDocs).values(docs);
+    console.log('Inserted legislative docs');
+
+    await tx.insert(schema.votes).values(votes);
+    console.log('Inserted votes');
+
+    await tx.insert(schema.merkleSnapshots).values(snapshot);
+    console.log('Inserted merkle snapshot');
+  });
 
   console.log('Seeding complete!');
   process.exit(0);
