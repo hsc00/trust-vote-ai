@@ -6,6 +6,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hsc00_trust-vote-ai&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hsc00_trust-vote-ai)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=hsc00_trust-vote-ai&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=hsc00_trust-vote-ai)
 [![Docs](https://img.shields.io/github/actions/workflow/status/hsc00/trust-vote-ai/deploy.yml?label=docs&logo=github)](https://hsc00.github.io/trust-vote-ai/)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/hsc00/trust-vote-ai?utm_source=oss&utm_medium=github&utm_campaign=hsc00%2Ftrust-vote-ai&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 ---
 
