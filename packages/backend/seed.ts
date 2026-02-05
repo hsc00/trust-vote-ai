@@ -51,27 +51,31 @@ async function seed() {
     },
   ];
 
+  const vote1UserId = randomUUID();
+  const vote2UserId = randomUUID();
+  const vote3UserId = randomUUID();
+
   const votes = [
     {
       id: randomUUID(),
       docId: docs[0].id,
-      userId: randomUUID(),
+      userId: vote1UserId,
       decision: 'yes' as const,
-      hash: createHash('sha3-512').update(`${docs[0].id}-${randomUUID()}-yes`).digest('hex'),
+      hash: createHash('sha3-512').update(`${docs[0].id}-${vote1UserId}-yes`).digest('hex'),
     },
     {
       id: randomUUID(),
       docId: docs[0].id,
-      userId: randomUUID(),
+      userId: vote2UserId,
       decision: 'no' as const,
-      hash: createHash('sha3-512').update(`${docs[0].id}-${randomUUID()}-no`).digest('hex'),
+      hash: createHash('sha3-512').update(`${docs[0].id}-${vote2UserId}-no`).digest('hex'),
     },
     {
       id: randomUUID(),
       docId: docs[1].id,
-      userId: randomUUID(),
+      userId: vote3UserId,
       decision: 'abstain' as const,
-      hash: createHash('sha3-512').update(`${docs[1].id}-${randomUUID()}-abstain`).digest('hex'),
+      hash: createHash('sha3-512').update(`${docs[1].id}-${vote3UserId}-abstain`).digest('hex'),
     },
   ];
 
