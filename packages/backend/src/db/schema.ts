@@ -33,7 +33,9 @@ export const docChunksEmbeddings = pgTable('doc_chunks_embeddings', {
 
 export const merkleSnapshots = pgTable('merkle_snapshots', {
   id: uuid('id').defaultRandom().primaryKey(),
-  docId: uuid('doc_id').references(() => legislativeDocs.id),
+  docId: uuid('doc_id')
+    .references(() => legislativeDocs.id, { onDelete: 'cascade' })
+    .notNull(),
   rootHash: varchar('root_hash', { length: 128 }).notNull(),
   totalVotes: integer('total_votes').notNull(),
   algorithm: varchar('algorithm', { length: 20 }).default('SHA3-512'),

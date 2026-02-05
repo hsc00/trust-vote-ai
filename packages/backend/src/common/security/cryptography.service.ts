@@ -27,6 +27,10 @@ export class CryptographyService {
   }
 
   getMerkleProof(hashes: string[], index: number): MerkleStep[] {
+    if (index < 0 || index >= hashes.length) {
+      throw new Error('Index out of bounds');
+    }
+
     const proof: MerkleStep[] = [];
     let currentLayer = hashes;
     let currentIndex = index;

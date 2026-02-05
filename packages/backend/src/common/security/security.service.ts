@@ -3,7 +3,7 @@ import { DRIZZLE } from '../../db/db.module';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../../db/schema';
 import { eq } from 'drizzle-orm';
-import { CryptographyService } from './cryptography.service';
+import { CryptographyService, MerkleStep } from './cryptography.service';
 
 @Injectable()
 export class SecurityService {
@@ -51,7 +51,7 @@ export class SecurityService {
 
   async sealDocumentVotes(docId: string) {
     const hashes = await this.getHashesForDoc(docId);
-    if (hashes.length === 0) throw new Error('No votes found');
+    if (hashes.length === 0) throw new NotFoundException(`No votes found`);
 
     const rootHash = this.crypto.generateMerkleRoot(hashes);
 
@@ -80,7 +80,7 @@ export class SecurityService {
     return this.crypto.hashSHA3(data);
   }
 
-  verifyProof(leaf: string, proof: any[], root: string) {
+  verifyProof(leaf: string, proof: MerkleStep[], root: string) {
     return this.crypto.verifyProof(leaf, proof, root);
   }
 }

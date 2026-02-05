@@ -19,7 +19,7 @@ export default mergeConfig(
         provider: 'v8',
         reporter: ['lcov', 'text'],
         reportsDirectory: path.resolve(__dirname, './coverage'),
-        include: ['src/**/*.ts'],
+        include: ['src/**/*.ts', 'packages/*/src/**/*.ts'],
         exclude: ['**/*.spec.ts', 'node_modules/**'],
       },
     },

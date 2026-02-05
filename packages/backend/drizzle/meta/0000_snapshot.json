@@ -1,5 +1,5 @@
 {
-  "id": "ef114952-2545-4b42-bc3b-ba4f6120dc15",
+  "id": "3b5099ad-4d4c-439e-b734-93e7d3b446e1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -132,7 +132,7 @@
           "name": "doc_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "root_hash": {
           "name": "root_hash",
@@ -169,7 +169,7 @@
           "tableTo": "legislative_docs",
           "columnsFrom": ["doc_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

@@ -17,6 +17,13 @@ describe('CryptographyService', () => {
     expect(service.hashSHA3('test').length).toBe(128);
   });
 
+  it('should enforce bounds check for index', () => {
+    const hashes = ['h1', 'h2'];
+
+    expect(() => service.getMerkleProof(hashes, -1)).toThrow('Index out of bounds');
+    expect(() => service.getMerkleProof(hashes, 2)).toThrow('Index out of bounds');
+  });
+
   it('should handle padding in getMerkleProof for odd number of hashes', () => {
     const h0 = service.hashSHA3('0');
     const h1 = service.hashSHA3('1');
