@@ -1,4 +1,11 @@
-import { Controller, Get, Param, ParseUUIDPipe, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Inject,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { SecurityService } from './common/security/security.service';
 
 @Controller('audit')
@@ -18,11 +25,17 @@ export class AppController {
     const vote = await this.securityService.getVoteById(voteId);
 
     if (!vote.docId) {
-      throw new Error('Vote has no document associated.');
+      throw new UnprocessableEntityException('Vote has no document associated.');
     }
 
     const allHashes = await this.securityService.getHashesForDoc(vote.docId);
     const index = allHashes.indexOf(vote.hash);
+
+    if (index === -1) {
+      throw new UnprocessableEntityException(
+        'Data integrity error: Vote hash not found in the associated document collection.',
+      );
+    }
 
     const proof = this.securityService.getMerkleProof(allHashes, index);
     const root = this.securityService.generateMerkleRoot(allHashes);

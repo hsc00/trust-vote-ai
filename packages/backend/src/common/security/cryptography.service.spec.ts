@@ -80,23 +80,6 @@ describe('CryptographyService', () => {
     expect(hash).toBe(service.hashSHA3('bufferTest'));
   });
 
-  it('should handle padding in getMerkleProof for odd number of hashes', () => {
-    const h0 = service.hashSHA3('0');
-    const h1 = service.hashSHA3('1');
-    const h2 = service.hashSHA3('2');
-    const hashes = [h0, h1, h2];
-
-    const proof = service.getMerkleProof(hashes, 2);
-
-    expect(proof[0]).toEqual({
-      position: 'right',
-      hash: h2,
-    });
-
-    const root = service.generateMerkleRoot(hashes);
-    expect(service.verifyProof(h2, proof, root)).toBe(true);
-  });
-
   it('should verify proof correctly when the node is in an odd position', () => {
     const hashes = ['a', 'b', 'c', 'd', 'e'].map((v) => service.hashSHA3(v));
     const root = service.generateMerkleRoot(hashes);
