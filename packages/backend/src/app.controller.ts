@@ -1,5 +1,5 @@
 import { Controller, Get, Param, NotFoundException, Inject } from '@nestjs/common';
-import { SecurityService, MerkleStep } from './common/security/security.service';
+import { SecurityService } from './common/security/security.service';
 
 @Controller('audit')
 export class AppController {
@@ -15,28 +15,30 @@ export class AppController {
 
   @Get('verify/:voteId')
   async getVoteAudit(@Param('voteId') voteId: string) {
-    const mockVotes = [
-      this.securityService.hashSHA3('vote1'),
-      this.securityService.hashSHA3('vote2'),
-      this.securityService.hashSHA3('vote3'),
-      this.securityService.hashSHA3('vote4'),
-    ];
+    const vote = await this.securityService.getVoteById(voteId);
 
-    const voteHash = this.securityService.hashSHA3(voteId);
-    const index = mockVotes.indexOf(voteHash);
-
-    if (index === -1) {
-      throw new NotFoundException('Vote hash not found in current block');
+    if (!vote) {
+      throw new NotFoundException('Vote not found in database.');
     }
 
-    const proof: MerkleStep[] = this.securityService.getMerkleProof(mockVotes, index);
-    const root = this.securityService.generateMerkleRoot(mockVotes);
+    if (!vote.docId) {
+      throw new Error('Vote has no document associated.');
+    }
+
+    const allHashes = await this.securityService.getHashesForDoc(vote.docId);
+    const index = allHashes.indexOf(vote.hash);
+
+    const proof = this.securityService.getMerkleProof(allHashes, index);
+    const root = this.securityService.generateMerkleRoot(allHashes);
 
     return {
-      voteId,
-      hash: voteHash,
+      voteId: vote.id,
+      userId: vote.userId,
+      decision: vote.decision,
+      hash: vote.hash,
       proof,
       merkleRoot: root,
+      timestamp: vote.timestamp,
       algorithm: 'SHA3-512',
     };
   }

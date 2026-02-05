@@ -7,6 +7,7 @@ import {
   vector,
   jsonb,
   varchar,
+  integer,
 } from 'drizzle-orm/pg-core';
 
 export const statusEnum = pgEnum('status', ['draft', 'active', 'revoked']);
@@ -28,6 +29,15 @@ export const docChunksEmbeddings = pgTable('doc_chunks_embeddings', {
   chunkContent: text('chunk_content').notNull(),
   embedding: vector('embedding', { dimensions: 1536 }),
   metadata: jsonb('metadata'),
+});
+
+export const merkleSnapshots = pgTable('merkle_snapshots', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  docId: uuid('doc_id').references(() => legislativeDocs.id),
+  rootHash: varchar('root_hash', { length: 128 }).notNull(),
+  totalVotes: integer('total_votes').notNull(),
+  algorithm: varchar('algorithm', { length: 20 }).default('SHA3-512'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 export const votes = pgTable('votes', {
