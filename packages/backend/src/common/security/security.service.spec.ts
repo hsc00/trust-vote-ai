@@ -19,6 +19,7 @@ describe('SecurityService', () => {
     where: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
     limit: vi.fn().mockReturnThis(),
+    transaction: vi.fn((callback) => callback(mockDb)),
   };
 
   beforeEach(async () => {

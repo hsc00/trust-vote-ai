@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as schema from './src/db/schema.js';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,7 +32,11 @@ async function seed() {
       content:
         'A comprehensive bill to address climate change through renewable energy incentives.',
       url: 'https://example.com/climate-bill',
-      contentHash: 'hash1',
+      contentHash: createHash('sha3-512')
+        .update(
+          'A comprehensive bill to address climate change through renewable energy incentives.',
+        )
+        .digest('hex'),
       status: 'active' as const,
     },
     {
@@ -40,7 +44,9 @@ async function seed() {
       title: 'Education Reform Act',
       content: 'Reforms to improve public education funding and standards.',
       url: 'https://example.com/education-act',
-      contentHash: 'hash2',
+      contentHash: createHash('sha3-512')
+        .update('Reforms to improve public education funding and standards.')
+        .digest('hex'),
       status: 'draft' as const,
     },
   ];
@@ -51,28 +57,28 @@ async function seed() {
       docId: docs[0].id,
       userId: randomUUID(),
       decision: 'yes' as const,
-      hash: 'votehash1',
+      hash: createHash('sha3-512').update(`${docs[0].id}-${randomUUID()}-yes`).digest('hex'),
     },
     {
       id: randomUUID(),
       docId: docs[0].id,
       userId: randomUUID(),
       decision: 'no' as const,
-      hash: 'votehash2',
+      hash: createHash('sha3-512').update(`${docs[0].id}-${randomUUID()}-no`).digest('hex'),
     },
     {
       id: randomUUID(),
       docId: docs[1].id,
       userId: randomUUID(),
       decision: 'abstain' as const,
-      hash: 'votehash3',
+      hash: createHash('sha3-512').update(`${docs[1].id}-${randomUUID()}-abstain`).digest('hex'),
     },
   ];
 
   const snapshot = {
     id: randomUUID(),
     docId: docs[0].id,
-    rootHash: 'merkleroot1',
+    rootHash: createHash('sha3-512').update('merkleroot').digest('hex'),
     totalVotes: 2,
     algorithm: 'SHA3-512',
   };
@@ -89,6 +95,7 @@ async function seed() {
   });
 
   console.log('Seeding complete!');
+  await pool.end();
   process.exit(0);
 }
 
@@ -96,5 +103,6 @@ try {
   await seed();
 } catch (err) {
   console.error('Seeding failed:', err);
+  await pool.end();
   process.exit(1);
 }

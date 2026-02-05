@@ -51,22 +51,30 @@ export class SecurityService {
   }
 
   async sealDocumentVotes(docId: string) {
-    const hashes = await this.getHashesForDoc(docId);
-    if (hashes.length === 0) throw new NotFoundException(`No votes found`);
+    return this.db.transaction(async (transaction) => {
+      const votes = await transaction
+        .select({ hash: schema.votes.hash })
+        .from(schema.votes)
+        .where(eq(schema.votes.docId, docId))
+        .orderBy(schema.votes.timestamp, schema.votes.id);
 
-    const rootHash = this.crypto.generateMerkleRoot(hashes);
+      const hashList = votes.map((vote) => vote.hash);
+      if (hashList.length === 0) throw new NotFoundException(`No votes found`);
 
-    const [snapshot] = await this.db
-      .insert(schema.merkleSnapshots)
-      .values({
-        docId,
-        rootHash,
-        totalVotes: hashes.length,
-        algorithm: 'SHA3-512',
-      })
-      .returning();
+      const rootHash = this.crypto.generateMerkleRoot(hashList);
 
-    return snapshot;
+      const [snapshot] = await transaction
+        .insert(schema.merkleSnapshots)
+        .values({
+          docId,
+          rootHash,
+          totalVotes: hashList.length,
+          algorithm: 'SHA3-512',
+        })
+        .returning();
+
+      return snapshot;
+    });
   }
 
   getMerkleProof(hashes: string[], index: number) {
