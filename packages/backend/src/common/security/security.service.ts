@@ -1,72 +1,95 @@
-import { Injectable } from '@nestjs/common';
-import { createHash } from 'node:crypto';
-
-export interface MerkleStep {
-  position: 'left' | 'right';
-  hash: string;
-}
+import { Injectable, Inject, forwardRef, NotFoundException } from '@nestjs/common';
+import { DRIZZLE } from '../../db/db.module';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import * as schema from '../../db/schema';
+import { eq } from 'drizzle-orm';
+import { CryptographyService, MerkleStep } from './cryptography.service';
 
 @Injectable()
 export class SecurityService {
-  hashSHA3(data: string | Buffer): string {
-    return createHash('sha3-512').update(data).digest('hex');
+  constructor(
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase<typeof schema>,
+    @Inject(forwardRef(() => CryptographyService))
+    private readonly crypto: CryptographyService,
+  ) {}
+
+  async persistVote(docId: string, userId: string, decision: 'yes' | 'no' | 'abstain') {
+    const timestamp = new Date();
+    const payload = `${docId}-${userId}-${decision}-${timestamp.toISOString()}`;
+    const voteHash = this.crypto.hashSHA3(payload);
+
+    const [newVote] = await this.db
+      .insert(schema.votes)
+      .values({ docId, userId, decision, hash: voteHash, timestamp })
+      .returning();
+
+    return newVote;
   }
 
-  generateMerkleRoot(hashes: string[]): string {
-    if (hashes.length === 0) return '';
-    if (hashes.length === 1) return hashes[0];
+  async getHashesForDoc(docId: string): Promise<string[]> {
+    const allVotes = await this.db
+      .select({ hash: schema.votes.hash })
+      .from(schema.votes)
+      .where(eq(schema.votes.docId, docId))
+      .orderBy(schema.votes.timestamp, schema.votes.id);
 
-    const layer: string[] = [];
-    for (let i = 0; i < hashes.length; i += 2) {
-      const left = hashes[i];
-      const right = hashes[i + 1] || left;
-      layer.push(this.hashSHA3(left + right));
-    }
-
-    return this.generateMerkleRoot(layer);
+    return allVotes.map((v) => v.hash);
   }
 
-  getMerkleProof(hashes: string[], index: number): MerkleStep[] {
-    const proof: MerkleStep[] = [];
-    let currentLayer = hashes;
-    let currentIndex = index;
+  async getVoteById(id: string) {
+    const [vote] = await this.db
+      .select()
+      .from(schema.votes)
+      .where(eq(schema.votes.id, id))
+      .limit(1);
 
-    while (currentLayer.length > 1) {
-      const isRightNode = currentIndex % 2 !== 0;
-      const siblingIndex = isRightNode ? currentIndex - 1 : currentIndex + 1;
-
-      const siblingHash = currentLayer[siblingIndex] ?? currentLayer[currentIndex];
-
-      proof.push({
-        position: isRightNode ? 'left' : 'right',
-        hash: siblingHash,
-      });
-
-      const nextLayer = [];
-      for (let i = 0; i < currentLayer.length; i += 2) {
-        const left = currentLayer[i];
-        const right = currentLayer[i + 1] || left;
-        nextLayer.push(this.hashSHA3(left + right));
-      }
-
-      currentLayer = nextLayer;
-      currentIndex = Math.floor(currentIndex / 2);
+    if (!vote) {
+      throw new NotFoundException(`Vote with ID ${id} not found.`);
     }
 
-    return proof;
+    return vote;
   }
 
-  verifyProof(leafHash: string, proof: MerkleStep[], root: string): boolean {
-    let currentHash = leafHash;
+  async sealDocumentVotes(docId: string) {
+    return this.db.transaction(async (transaction) => {
+      const votes = await transaction
+        .select({ hash: schema.votes.hash })
+        .from(schema.votes)
+        .where(eq(schema.votes.docId, docId))
+        .orderBy(schema.votes.timestamp, schema.votes.id);
 
-    for (const step of proof) {
-      if (step.position === 'left') {
-        currentHash = this.hashSHA3(step.hash + currentHash);
-      } else {
-        currentHash = this.hashSHA3(currentHash + step.hash);
-      }
-    }
+      const hashList = votes.map((vote) => vote.hash);
+      if (hashList.length === 0) throw new NotFoundException(`No votes found`);
 
-    return currentHash === root;
+      const rootHash = this.crypto.generateMerkleRoot(hashList);
+
+      const [snapshot] = await transaction
+        .insert(schema.merkleSnapshots)
+        .values({
+          docId,
+          rootHash,
+          totalVotes: hashList.length,
+          algorithm: 'SHA3-512',
+        })
+        .returning();
+
+      return snapshot;
+    });
+  }
+
+  getMerkleProof(hashes: string[], index: number) {
+    return this.crypto.getMerkleProof(hashes, index);
+  }
+
+  generateMerkleRoot(hashes: string[]) {
+    return this.crypto.generateMerkleRoot(hashes);
+  }
+
+  hashSHA3(data: string | Buffer) {
+    return this.crypto.hashSHA3(data);
+  }
+
+  verifyProof(leaf: string, proof: MerkleStep[], root: string) {
+    return this.crypto.verifyProof(leaf, proof, root);
   }
 }
