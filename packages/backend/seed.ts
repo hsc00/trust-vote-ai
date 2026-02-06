@@ -5,6 +5,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as schema from './src/db/schema.js';
 import { randomUUID, createHash } from 'node:crypto';
+import { CryptographyService } from './src/common/security/cryptography.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,11 +80,14 @@ async function seed() {
     },
   ];
 
+  const cryptoService = new CryptographyService();
+  const docHashes = votes.filter((vote) => vote.docId === docs[0].id).map((vote) => vote.hash);
+
   const snapshot = {
     id: randomUUID(),
     docId: docs[0].id,
-    rootHash: createHash('sha3-512').update('merkleroot').digest('hex'),
-    totalVotes: 2,
+    rootHash: cryptoService.generateMerkleRoot(docHashes),
+    totalVotes: docHashes.length,
     algorithm: 'SHA3-512',
   };
 
