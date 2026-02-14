@@ -21,7 +21,7 @@ The **Trust Vote AI** system requires a frontend interface capable of providing 
 
 Next.js was selected to bridge the gap between a content-heavy legislative platform and a high-security cryptographic dashboard:
 
-1. **Client-Side Verification:** By utilizing Client Components, we can perform SHA3-512 hashing directly in the browser via the **Web Crypto API**. This removes the need to "trust" the server's proof results.
+1. **Client-Side Verification:** By utilizing Client Components, we can perform SHA3-512 hashing directly in the browser using cryptographic libraries like **noble-hashes**. This removes the need to "trust" the server's proof results.
 2. **React Compiler Integration:** We will use the **React Compiler** to ensure optimal performance without manual memoization (`useMemo`/`useCallback`). This is critical when re-rendering complex Merkle Tree visualizations and processing cryptographic proofs.
 3. **SEO & Legislative Context:** Legislative documents are rendered using **Server-Side Rendering (SSR)**, ensuring they are searchable and load instantly, while the voting dashboard remains highly interactive.
 4. **Type Safety (Monorepo):** Being in a TypeScript monorepo, we can share the exact same `MerkleProof` and `Vote` interfaces between the NestJS backend and the Next.js frontend, preventing contract mismatches.
