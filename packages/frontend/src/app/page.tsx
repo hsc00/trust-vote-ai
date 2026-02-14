@@ -1,5 +1,15 @@
 import Image from "next/image";
 
+/**
+ * Render the homepage layout with Next.js logo, introductory text, and action links.
+ *
+ * Renders a centered, responsive page using Next/Image and Tailwind CSS. The layout
+ * includes the Next.js logo, an instructional headline, links to "Templates" and
+ * "Learning", and two action buttons: "Deploy Now" (with Vercel logo) and
+ * "Documentation".
+ *
+ * @returns The root JSX element for the homepage layout.
+ */
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
