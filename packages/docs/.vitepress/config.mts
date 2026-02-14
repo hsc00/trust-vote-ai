@@ -59,6 +59,10 @@ export default defineConfig({
             text: '11. Dependency Management and Vulnerability Scanning',
             link: '/architecture/11-dependency-management-vulnerability-scanning',
           },
+          {
+            text: '12. Frontend Framework',
+            link: '/architecture/12-frontend-framework',
+          },
         ],
       },
       {
