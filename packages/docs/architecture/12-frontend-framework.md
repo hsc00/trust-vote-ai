@@ -42,7 +42,7 @@ Next.js was selected to bridge the gap between a content-heavy legislative platf
 
 ## Consequences
 
-- **Verification Hook:** We must implement a custom React Hook to handle the Merkle Proof verification using the browser's native subtle crypto.
+- **Verification Hook:** We must implement a custom React Hook to handle the Merkle Proof verification using WASM library.
 - **Shared Package:** We should create a `@trustvote/shared` package to house the cryptographic types and validation logic used by both frontend and backend.
 - **Client Bundling:** We must be careful to only import cryptographic libraries (like `noble-hashes` if needed) in Client Components to keep the Server Components light.
 - **Compiler Configuration:** The `next.config.ts` must be updated to enable `reactCompiler: true`.
