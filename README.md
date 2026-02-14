@@ -15,6 +15,7 @@ The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring co
 
 - `packages/docs`: Technical documentation and Architectural Decision Records (VitePress).
 - `packages/backend`: NestJS API Core (In progress).
+- `packages/frontend`: Next.js Audit Dashboard (React 19+ / Compiler Enabled).
 
 ### Security & Quality Stack
 
@@ -28,6 +29,7 @@ The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring co
 ### Infrastructure & Persistence
 
 - **Runtime:** Node.js 22 (LTS) / NestJS (Fastify adapter).
+- **Frontend:** Next.js 16 (Turbopack) + React Compiler (Stable v1.0) for zero-hook memoization.
 - **Database:** PostgreSQL 17 + `pgvector` for AI-powered semantic search.
 - **ORM:** Drizzle ORM (Type-safe, high-performance SQL operations).
 - **Caching:** Redis 7 (Alpine-based) for session management and rate-limiting.
@@ -46,12 +48,12 @@ We maintain a rigorous record of the project's evolution:
 
 _Establishing the secure baseline and cryptographic core._
 
-- [x] Initialize Documentation Stack (VitePress) & ADRs.
-- [x] Security Hardening (NPM Audit Overrides, SonarCloud, GitGuardian).
-- [x] CI/CD Pipeline Setup with Strict Quality Gates.
-- [x] Backend Core Service Initialization (NestJS + Fastify).
-- [x] Database Architecture (PostgreSQL + pgvector + Drizzle ORM).
-- [x] Secure Voting Engine: Implementation of SHA3-512 Hashing & Merkle Tree Data Structure.
+- [x] **Documentation & ADRs:** Initialize Documentation Stack (VitePress) & Architectural Decision Records.
+- [x] **Hardening & Security:** Security Hardening (NPM Audit Overrides, SonarCloud, GitGuardian).
+- [x] **Automated Quality:** CI/CD Pipeline Setup with Strict Quality Gates.
+- [x] **Service Core:** Backend Core Service Initialization (NestJS + Fastify).
+- [x] **Persistence Layer:** Database Architecture (PostgreSQL + pgvector + Drizzle ORM).
+- [x] **Cryptography Core:** Implementation of SHA3-512 Hashing & Merkle Tree Data Structure.
 
 ### Phase 2: Transparency (In Progress)
 
@@ -60,6 +62,7 @@ _Enabling public verification of the cryptographic proofs._
 - [x] **Merkle Proof Generator:** Logic to extract and verify inclusion proofs.
 - [x] **Public Audit API:** Endpoint for `GET /audit/verify/:voteId` (Validated with mock context).
 - [x] **Data Persistence:** Transition from mock contexts to Drizzle-backed Merkle sessions.
+- [x] **Frontend Initialization:** Next.js 16 app with React Compiler.
 - [ ] **Real-time Dashboard:** Frontend integration to display the current Root Hash.
 
 ### Phase 3: Cognitive Intelligence (Next)
