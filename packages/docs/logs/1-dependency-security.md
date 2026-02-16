@@ -1,7 +1,5 @@
 # Dependency Integrity
 
-**Date:** 2026-01-24
-
 ## Context
 
 Initializing the documentation engine (VitePress).

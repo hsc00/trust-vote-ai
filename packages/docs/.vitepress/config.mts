@@ -63,6 +63,10 @@ export default defineConfig({
             text: '12. Frontend Framework',
             link: '/architecture/12-frontend-framework',
           },
+          {
+            text: '13. Shared Cryptographic Logic',
+            link: '/architecture/13-shared-cryptography-logic',
+          },
         ],
       },
       {

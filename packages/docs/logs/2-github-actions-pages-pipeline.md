@@ -1,7 +1,5 @@
 # GitHub Actions & Pages Pipeline
 
-**Date:** 2026-01-24
-
 ## Context
 
 Implementation of a CI/CD pipeline to automate the deployment of VitePress documentation to GitHub Pages.
