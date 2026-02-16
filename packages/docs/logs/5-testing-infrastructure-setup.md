@@ -1,7 +1,5 @@
 # Testing & Quality Infrastructure (CI/CD)
 
-**Date:** 2026-01-29
-
 ## Context
 
 Implemented a centralized testing and automated quality strategy to ensure "Rating A" on SonarCloud and the long-term reliability of the TrustVote AI voting engine.

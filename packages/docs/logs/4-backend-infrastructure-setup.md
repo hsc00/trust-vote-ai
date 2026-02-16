@@ -1,7 +1,5 @@
 # Backend Infrastructure Setup
 
-**Date:** 2026-01-29
-
 ## Context
 
 Initial setup of the `@trust-vote/backend` package within the monorepo, focusing on modern Node.js 24 standards and high-performance execution.

@@ -14,8 +14,8 @@
 The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring consistency across the entire ecosystem.
 
 - `packages/docs`: Technical documentation and Architectural Decision Records (VitePress).
-- `packages/backend`: NestJS API Core (In progress).
-- `packages/frontend`: Next.js Audit Dashboard (React 19+ / Compiler Enabled).
+- `packages/backend`: NestJS API Core (Cryptographic Engine & Persistence Layer).
+- `packages/frontend`: Next.js Audit Dashboard (React 19+).
 
 ### Security & Quality Stack
 
