@@ -17,22 +17,33 @@ Docker, Kubernetes, deployment strategies, and monitoring.
 ```dockerfile
 #
 # Base image version rationale:
-# - Lock to a specific major/minor (e.g., node:20-alpine) for reproducible builds and to avoid breaking changes from upstream.
+# - Lock to a specific minor/patch version (e.g., node:20.20-alpine or node:20.20.1-alpine) for reproducible builds and to avoid breaking changes from upstream. Note: node:20-alpine is a major-only moving alias and may introduce breaking changes unexpectedly.
 # - Prefer LTS versions for stability and security. Check your package.json "engines" field or .nvmrc/.node-version for project requirements.
 # - Review and update the Node version regularly (e.g., quarterly or on security releases) to balance compatibility and security.
 # - Alpine images are smaller but use musl libc, which may cause compatibility issues with some native Node modules. Test thoroughly if using native dependencies.
 #
-FROM node:20-alpine AS builder
+FROM node:20.20-alpine AS builder  # Use explicit minor version for reproducibility
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine
+# Install only production dependencies for runtime image
+FROM node:20.20-alpine AS prod-deps
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+FROM node:20.20-alpine
+WORKDIR /app
+# Create non-root user and group
+RUN addgroup -g 1001 appgroup && adduser -D -u 1001 -G appgroup appuser
+# Copy built app and production node_modules
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
+RUN chown -R appuser:appgroup /app
+USER appuser
 CMD ["node", "dist/index.js"]
 ```
 

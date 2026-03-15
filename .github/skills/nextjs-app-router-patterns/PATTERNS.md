@@ -47,12 +47,16 @@ export default function ProductsPage({
 }
 
 export async function ProductList({ category, sort, page }: ProductFilters) {
+  const params: Record<string, string> = {};
+  if (category !== undefined) params.category = category;
+  if (sort !== undefined) params.sort = sort;
+  if (page !== undefined) params.page = page;
   const res = await fetch(
-    `${process.env.API_URL}/products?${new URLSearchParams({ category, sort, page })}`,
+    `${process.env.API_URL}/products?${new URLSearchParams(params)}`,
     { next: { tags: ['products'] } }
-  )
-  if (!res.ok) throw new Error('Failed to fetch products')
-  const { products, totalPages } = await res.json()
+  );
+  if (!res.ok) throw new Error('Failed to fetch products');
+  const { products, totalPages } = await res.json();
 
   return (
     <div>
@@ -299,7 +303,21 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const product = await db.product.create({ data: await request.json() });
+  const body = await request.json();
+  // Manual validation and whitelisting (replace with schema validator as needed)
+  const { name, price, description } = body;
+  if (
+    typeof name !== 'string' ||
+    name.length === 0 ||
+    name.length > 100 ||
+    typeof price !== 'number' ||
+    price < 0 ||
+    (description && typeof description !== 'string')
+  ) {
+    return NextResponse.json({ error: 'Invalid product data' }, { status: 422 });
+  }
+  // Only pass validated/whitelisted fields
+  const product = await db.product.create({ data: { name, price, description } });
   return NextResponse.json(product, { status: 201 });
 }
 

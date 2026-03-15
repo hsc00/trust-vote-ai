@@ -48,6 +48,22 @@ import Redis from 'ioredis';
 const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: Number(process.env.REDIS_PORT ?? 6379),
+  // Configure retry/backoff strategy for production resilience
+  retryStrategy(times) {
+    const delay = Math.min(times * 50, 2000);
+    return delay;
+  },
+  // maxRetriesPerRequest: 5, // Uncomment to limit retries
+});
+
+redis.on('connect', () => {
+  console.log('Redis client connecting...');
+});
+redis.on('ready', () => {
+  console.log('Redis client ready');
+});
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
 });
 const store = (prefix: string) => new RedisStore({ client: redis, prefix });
 

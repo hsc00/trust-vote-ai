@@ -122,7 +122,7 @@ Core technologies, frameworks, databases, and message queues for modern backend 
 - Geospatial indexes
 - Streams (event sourcing)
 
-**Performance:** 10-100x faster than disk-based databases
+**Performance:** Significantly faster than disk-based databases for many workloads (depends on hardware and workload)
 
 **Use Cases:**
 
@@ -176,7 +176,7 @@ Core technologies, frameworks, databases, and message queues for modern backend 
 
 ### Apache Kafka
 
-**Best For:** Event streaming, millions messages/second
+**Best For:** Event streaming, millions of messages/second
 
 **Strengths:**
 

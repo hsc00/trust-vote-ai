@@ -141,18 +141,20 @@ class SearchService:
         )
 
         # RRF fusion
+        rrf_expr = (
+            func.coalesce(1.0 / (K + vector_subq.c.vector_rank), 0.0) +
+            func.coalesce(1.0 / (K + keyword_subq.c.keyword_rank), 0.0)
+        ).label("rrf_score")
+
         rrf_subq = (
             select(
                 func.coalesce(vector_subq.c.id, keyword_subq.c.id).label("chunk_id"),
-                (
-                    func.coalesce(1.0 / (K + vector_subq.c.vector_rank), 0.0) +
-                    func.coalesce(1.0 / (K + keyword_subq.c.keyword_rank), 0.0)
-                ).label("rrf_score")
+                rrf_expr
             )
             .select_from(
                 vector_subq.outerjoin(keyword_subq, vector_subq.c.id == keyword_subq.c.id, full=True)
             )
-            .order_by(rrf_subq.c.rrf_score.desc())
+            .order_by(rrf_expr.desc())
             .limit(top_k)
             .subquery()
         )

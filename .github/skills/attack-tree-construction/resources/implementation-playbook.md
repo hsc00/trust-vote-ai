@@ -145,6 +145,9 @@ class AttackNode:
                 "time_hours": self.attributes.time_hours,
             },
             "mitigations": self.mitigations,
+            "cve_refs": self.cve_refs,
+            "requires_insider": self.requires_insider,
+            "requires_physical": self.requires_physical,
             "children": [c.to_dict() for c in self.children]
         }
 
@@ -417,6 +420,7 @@ class MermaidExporter:
     def export(self) -> str:
         """Export tree to Mermaid flowchart."""
         self._lines = ["flowchart TD"]
+        self._node_count = 0
         self._export_node(self.tree.root, None)
         return "\n".join(self._lines)
 
@@ -456,7 +460,7 @@ class MermaidExporter:
             Difficulty.HIGH: "fill:#6bcb77",
             Difficulty.EXPERT: "fill:#4d96ff",  # Blue - hard attack
         }
-        color = colors.get(node.attributes.difficulty, "fill:#gray")
+        color = colors.get(node.attributes.difficulty, "fill:gray")
         return color
 
 

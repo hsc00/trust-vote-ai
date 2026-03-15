@@ -453,6 +453,11 @@ Examples:
             if not configurator.load_config(args.load):
                 sys.exit(1)
             print(f"Loaded configuration from {args.load}")
+            # Merge CLI rule flags into loaded config
+            cli_config = create_from_args(args)
+            # Merge rules from cli_config into configurator
+            for rule in cli_config.rules:
+                configurator.rules.append(rule)
             list_rules(configurator)
         elif args.table:
             # Command-line mode

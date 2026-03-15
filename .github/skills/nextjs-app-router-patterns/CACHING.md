@@ -45,9 +45,10 @@ export async function updateProduct(id: string, data: ProductData) {
     revalidatePath(`/products/${id}`);
     return { success: true };
   } catch (err) {
+    console.error('updateProduct error:', err);
     return {
       error: 'Exception during update',
-      message: err instanceof Error ? err.message : String(err),
+      message: 'An unexpected error occurred',
     };
   }
 }
@@ -100,7 +101,7 @@ export async function safeUpdateProduct(id: string, data: ProductData) {
     return { success: true };
   } catch (err) {
     console.error('safeUpdateProduct error:', err);
-    return { error: 'Mutation failed', message: err instanceof Error ? err.message : String(err) };
+    return { error: 'Mutation failed', message: 'An unexpected error occurred' };
   }
 }
 ```

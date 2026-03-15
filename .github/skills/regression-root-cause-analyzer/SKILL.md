@@ -29,10 +29,10 @@ A regression has one advantage over a greenfield bug: somewhere in history there
 
 `git bisect` is log₂(N), so even 1000 commits is 10 runs. Automate if the oracle is scriptable:
 
-````bash
+```bash
 git bisect start <bad> <good>
 git bisect run ./oracle.sh
-```bash
+```
 
 Where `oracle.sh` exits 0 when the regression is **absent** and non-zero when **present**. If the oracle is manual (visual check), you're doing it by hand — still only ~10 iterations.
 
@@ -59,7 +59,7 @@ Bisect gives you a SHA. Now engage: `git show <sha>`. You're looking for **which
 
 **Input:** `test_admin_can_delete_user` passes on `v3.1.0`, fails on `main` (400 commits later).
 
-```bash
+````bash
 git bisect start main v3.1.0
 git bisect run pytest tests/test_admin.py::test_admin_can_delete_user -x
 ```bash

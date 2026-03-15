@@ -318,6 +318,7 @@ splitter = MarkdownHeaderTextSplitter(
 ### Pinecone (Serverless)
 
 ```python
+import os
 from pinecone import Pinecone, ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 
@@ -516,8 +517,10 @@ async def evaluate_rag_system(
         retrieved_ids = {doc.metadata["id"] for doc in result["context"]}
         relevant_ids = set(test["relevant_doc_ids"])
 
-        precision = len(retrieved_ids & relevant_ids) / len(retrieved_ids)
-        recall = len(retrieved_ids & relevant_ids) / len(relevant_ids)
+
+        intersection_count = len(retrieved_ids & relevant_ids)
+        precision = intersection_count / len(retrieved_ids) if len(retrieved_ids) > 0 else 0.0
+        recall = intersection_count / len(relevant_ids) if len(relevant_ids) > 0 else 0.0
 
         metrics["retrieval_precision"].append(precision)
         metrics["retrieval_recall"].append(recall)

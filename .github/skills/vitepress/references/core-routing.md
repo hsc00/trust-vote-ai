@@ -9,18 +9,18 @@ VitePress uses file-based routing where markdown files map directly to HTML page
 
 ## File to URL Mapping
 
-````text
+```text
 .
 ├─ index.md           →  /index.html (/)
 ├─ about.md           →  /about.html
 ├─ guide/
 │  ├─ index.md        →  /guide/index.html (/guide/)
 │  └─ getting-started.md → /guide/getting-started.html
-```text
+```
 
 ## Project Structure
 
-```text
+````text
 .
 ├─ docs                    # Project root
 │  ├─ .vitepress          # VitePress directory

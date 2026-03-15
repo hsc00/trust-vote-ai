@@ -1,3 +1,5 @@
+# Add for forward reference support in type annotations
+from __future__ import annotations
 from dataclasses import dataclass
 # ============================================================================
 # SCORED CHUNK DATACLASS
@@ -5,7 +7,7 @@ from dataclasses import dataclass
 
 @dataclass
 class ScoredChunk:
-    chunk: Chunk
+    chunk: "Chunk"
     rrf_score: float
     boosted_score: float
     vector_distance: float
@@ -67,7 +69,7 @@ class ChunkRepository:
         top_k: int = 10,
         content_type_filter: list[str] | None = None,
         min_similarity: float = 0.0
-    ) -> list[Chunk]:
+    ) -> list[ScoredChunk]:
         """
         Perform hybrid search using RRF.
 
@@ -79,7 +81,7 @@ class ChunkRepository:
             min_similarity: Minimum cosine similarity (0.0-1.0)
 
         Returns:
-            List of chunks ranked by RRF score
+            List of ScoredChunk objects ranked by RRF score
         """
 
         # Fetch multiplier for better RRF coverage
@@ -94,13 +96,15 @@ class ChunkRepository:
             content_type_filter=content_type_filter
         )
 
+
         # ===== VECTOR SEARCH =====
+        fetch_limit = top_k * HYBRID_FETCH_MULTIPLIER
         vector_subquery = (
             select(
                 Chunk.id,
                 Chunk.embedding.cosine_distance(query_embedding).label("vector_distance"),
                 func.row_number().over(
-        fetch_limit = top_k * HYBRID_FETCH_MULTIPLIER
+                    order_by=Chunk.embedding.cosine_distance(query_embedding)
                 ).label("vector_rank")
             )
             .where(Chunk.embedding.isnot(None))
@@ -145,7 +149,7 @@ class ChunkRepository:
         keyword_subquery = keyword_subquery.limit(fetch_limit).subquery("keyword_results")
 
         # ===== RECIPROCAL RANK FUSION (RRF) =====
-        K = 60  # RRF smoothing constant (empirically optimal)
+        K = RRF_K_CONSTANT  # RRF smoothing constant (empirically optimal)
 
         rrf_query = (
             select(
@@ -161,7 +165,7 @@ class ChunkRepository:
                 vector_subquery.outerjoin(
                     keyword_subquery,
                     vector_subquery.c.id == keyword_subquery.c.id,
-        K = RRF_K_CONSTANT  # RRF smoothing constant (empirically optimal)
+                    full=True
                 )
             )
             .order_by(
@@ -204,7 +208,7 @@ class ChunkRepository:
 
         # Re-sort by boosted scores and take top_k
         boosted_chunks.sort(key=lambda x: x.boosted_score, reverse=True)
-        final_chunks = [sc.chunk for sc in boosted_chunks[:top_k]]
+        final_chunks = boosted_chunks[:top_k]
 
         logger.info(
             "hybrid_search completed",

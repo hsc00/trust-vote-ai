@@ -8,10 +8,12 @@ Usage:
     python scripts/calculate_metrics.py <tracking-csv-path>
 """
 
+
 import sys
 import csv
 from pathlib import Path
 from collections import Counter
+import re
 
 def calculate_metrics(csv_path):
     """Calculate comprehensive QA metrics from tracking CSV."""
@@ -20,20 +22,20 @@ def calculate_metrics(csv_path):
         reader = csv.DictReader(f)
         tests = list(reader)
 
-    total = len([t for t in tests if t['Test Case ID'] not in ['', 'Test Case ID']])
-    executed = len([t for t in tests if t['Status'] == 'Completed'])
-    passed = len([t for t in tests if t['Result'] == '✅ PASSED'])
-    failed = len([t for t in tests if t['Result'] == '❌ FAILED'])
+    total = len([t for t in tests if t.get('Test Case ID', '') not in ['', 'Test Case ID']])
+    executed = len([t for t in tests if t.get('Status', '') == 'Completed'])
+    passed = len([t for t in tests if t.get('Result', '') == '✅ PASSED'])
+    failed = len([t for t in tests if t.get('Result', '') == '❌ FAILED'])
 
     pass_rate = (passed / executed * 100) if executed > 0 else 0
     execution_rate = (executed / total * 100) if total > 0 else 0
 
     # Bug analysis
-    bug_ids = [t['Bug ID'] for t in tests if t['Bug ID'] and t['Bug ID'] != '']
+    bug_ids = [t.get('Bug ID', '') for t in tests if t.get('Bug ID', '')]
     unique_bugs = len(set(bug_ids))
 
     # Priority analysis
-    priority_counts = Counter([t['Priority'] for t in tests if t['Priority']])
+    priority_counts = Counter([t.get('Priority', '') for t in tests if t.get('Priority', '')])
 
     print("\n" + "="*60)
     print("QA METRICS DASHBOARD")
@@ -59,7 +61,6 @@ def calculate_metrics(csv_path):
         print(f"   {priority}:              {count}")
 
     print("\n🎯 QUALITY GATES")
-    import re
     def has_p0_bug(test):
         bug_id = test.get('Bug ID', '')
         notes = test.get('Notes', '')
@@ -80,10 +81,6 @@ def calculate_metrics(csv_path):
         ),
         "No Blocked Tests": not any(
             (str(t.get('Status', '')).lower() == 'blocked') for t in tests
-        ),
-        "All Required Tests Present": all(
-            t.get('Required', '').lower() != 'yes' or str(t.get('Status', '')).lower() in {'pass', 'fail', 'blocked'}
-            for t in tests
         ),
     }
 

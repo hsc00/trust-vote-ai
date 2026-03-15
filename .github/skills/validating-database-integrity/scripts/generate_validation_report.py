@@ -1,3 +1,4 @@
+import html
 #!/usr/bin/env python3
 """
 Generate comprehensive report of data validation results.
@@ -36,7 +37,15 @@ class ValidationReportGenerator:
             with open(filepath, 'r') as f:
                 data = json.load(f)
 
-            self.results = data.get("validations", [])
+            validations = data.get("validations", [])
+            if not isinstance(validations, list):
+                print(f"Error: 'validations' must be a list in {filepath}", file=sys.stderr)
+                return False
+            for idx, entry in enumerate(validations):
+                if not isinstance(entry, dict) or 'valid' not in entry or 'details' not in entry:
+                    print(f"Error: Validation entry at index {idx} missing required keys 'valid' and 'details' in {filepath}", file=sys.stderr)
+                    return False
+            self.results = validations
             self.metadata = {
                 "table": data.get("table", "unknown"),
                 "timestamp": data.get("timestamp", datetime.now(timezone.utc).isoformat()),
@@ -259,17 +268,17 @@ class ValidationReportGenerator:
             "<body>",
             "<div class='container'>",
             "<h1>Data Validation Report</h1>",
-            f"<p><strong>Table:</strong> {self.metadata.get('table', 'Unknown')}</p>",
+            f"<p><strong>Table:</strong> {html.escape(str(self.metadata.get('table', 'Unknown')))}</p>",
             f"<p><strong>Generated:</strong> {datetime.now(timezone.utc).isoformat()}</p>"
         ]
 
         # Summary metrics
         html.append("<h2>Summary</h2>")
         html.append("<div class='summary'>")
-        html.append(f"<div class='metric'><div class='value'>{summary['total']}</div><div class='label'>Total Checks</div></div>")
-        html.append(f"<div class='metric'><div class='value success'>{summary['passed']}</div><div class='label'>Passed</div></div>")
-        html.append(f"<div class='metric'><div class='value critical'>{summary['failed']}</div><div class='label'>Failed</div></div>")
-        html.append(f"<div class='metric'><div class='value'>{summary['pass_rate']:.1f}%</div><div class='label'>Pass Rate</div></div>")
+        html.append(f"<div class='metric'><div class='value'>{html.escape(str(summary['total']))}</div><div class='label'>Total Checks</div></div>")
+        html.append(f"<div class='metric'><div class='value success'>{html.escape(str(summary['passed']))}</div><div class='label'>Passed</div></div>")
+        html.append(f"<div class='metric'><div class='value critical'>{html.escape(str(summary['failed']))}</div><div class='label'>Failed</div></div>")
+        html.append(f"<div class='metric'><div class='value'>{html.escape(f'{summary['pass_rate']:.1f}') }%</div><div class='label'>Pass Rate</div></div>")
         html.append("</div>")
 
         # Table statistics
@@ -277,8 +286,8 @@ class ValidationReportGenerator:
             html.append("<h2>Table Statistics</h2>")
             html.append("<table>")
             html.append("<tr><th>Metric</th><th>Value</th></tr>")
-            html.append(f"<tr><td>Total Rows</td><td>{stats.get('row_count', 'N/A')}</td></tr>")
-            html.append(f"<tr><td>Total Columns</td><td>{stats.get('column_count', 'N/A')}</td></tr>")
+            html.append(f"<tr><td>Total Rows</td><td>{html.escape(str(stats.get('row_count', 'N/A')))}</td></tr>")
+            html.append(f"<tr><td>Total Columns</td><td>{html.escape(str(stats.get('column_count', 'N/A')))}</td></tr>")
             html.append("</table>")
 
         # Issues
@@ -290,8 +299,8 @@ class ValidationReportGenerator:
                 severity_class = issue['severity']
                 html.append(
                     f"<div class='issue'>"
-                    f"<span class='{severity_class}'>{issue['severity'].upper()}</span>: "
-                    f"<strong>{issue['rule']}</strong> on column <code>{issue['column']}</code>"
+                    f"<span class='{html.escape(severity_class)}'>{html.escape(issue['severity'].upper())}</span>: "
+                    f"<strong>{html.escape(str(issue['rule']))}</strong> on column <code>{html.escape(str(issue['column']))}</code>"
                     f"</div>"
                 )
 

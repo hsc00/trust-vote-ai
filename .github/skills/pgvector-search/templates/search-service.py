@@ -46,8 +46,8 @@ class SearchResult(BaseModel):
     bm25_score: float | None
 
     # Metadata
+
     rank: int
-    similarity: float  # 1 - vector_distance, handles None
 
     @property
     def similarity(self) -> float:
@@ -73,6 +73,11 @@ class EmbeddingService(Protocol):
     async def embed_text(self, text: str) -> list[float]: ...
 
 
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from chunk-repository import ScoredChunk
+
 class ChunkRepository(Protocol):
     """Chunk repository interface."""
     async def hybrid_search(
@@ -82,7 +87,7 @@ class ChunkRepository(Protocol):
         top_k: int,
         content_type_filter: list[str] | None,
         min_similarity: float
-    ) -> list: ...
+    ) -> list["ScoredChunk"]: ...
 
 
 # ============================================================================
@@ -130,19 +135,19 @@ class SearchService:
         # 3. Format results
         results = [
             SearchResult(
-                chunk_id=chunk.id,
-                content=chunk.content,
-                section_title=chunk.section_title,
-                section_path=chunk.section_path,
-                content_type=chunk.content_type,
-                rrf_score=chunk._rrf_score,
-                boosted_score=chunk._boosted_score,
-                vector_distance=chunk._vector_distance,
-                bm25_score=chunk._bm25_score,
+                chunk_id=sc.chunk.id,
+                content=sc.chunk.content,
+                section_title=sc.chunk.section_title,
+                section_path=sc.chunk.section_path,
+                content_type=sc.chunk.content_type,
+                rrf_score=sc.rrf_score,
+                boosted_score=sc.boosted_score,
+                vector_distance=sc.vector_distance,
+                bm25_score=sc.bm25_score,
                 rank=idx + 1,
-                similarity=0.0 if chunk._vector_distance is None else 1.0 - chunk._vector_distance
+                similarity=0.0 if sc.vector_distance is None else 1.0 - sc.vector_distance
             )
-            for idx, chunk in enumerate(chunks)
+            for idx, sc in enumerate(chunks)
         ]
 
         elapsed_ms = int((time.time() - start_time) * 1000)

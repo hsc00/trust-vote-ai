@@ -262,13 +262,13 @@ Automation scripts for QA infrastructure:
 
 ### Pattern 1: Starting Fresh QA
 
-````text
+```text
 1. python scripts/init_qa_project.py my-app ./
 2. Fill in BASELINE-METRICS.md (document current state)
 3. Write test cases using assets/templates/TEST-CASE-TEMPLATE.md
 4. Copy master prompt from references/master_qa_prompt.md
 5. Paste to LLM → autonomous execution begins
-```text
+```
 
 ### Pattern 2: LLM-Driven Testing (Autonomous)
 
@@ -279,29 +279,25 @@ Automation scripts for QA infrastructure:
 4. LLM executes all 342 test cases over 5 weeks
 5. LLM updates tracking CSVs automatically
 6. LLM generates weekly reports automatically
-```text
+```
 
 ### Pattern 3: Adding Security Testing
 
-````
-
+```text
 1. Read references/google_testing_standards.md (OWASP section)
 2. Write TC-SEC-XXX test cases for each OWASP threat
 3. Target 90% coverage (9/10 threats)
 4. Document mitigations in test cases
-
 ```
 
 ### Pattern 4: Third-Party QA Handoff
 
-```
-
+```text
 1. Ensure all templates populated
 2. Verify BASELINE-METRICS.md complete
 3. Package tests/docs/ folder
 4. Include references/master_qa_prompt.md for autonomous execution
 5. QA team can start immediately (Day 1 onboarding → 5 weeks testing)
-
 ```
 
 ## Success Criteria
@@ -314,4 +310,7 @@ This skill is effective when:
 - ✅ Progress visible in real-time (CSV tracking)
 - ✅ Autonomous execution enabled (LLM can execute full plan)
 - ✅ Third-party QA teams can start testing immediately
+
+```
+
 ```

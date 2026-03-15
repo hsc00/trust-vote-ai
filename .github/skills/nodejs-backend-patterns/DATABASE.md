@@ -105,10 +105,13 @@ async createOrder(userId: string, items: OrderItem[]) {
         'INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1,$2,$3,$4)',
         [orderId, item.productId, item.quantity, item.price],
       );
-      await client.query(
-        'UPDATE products SET stock = stock - $1 WHERE id = $2',
+      const result = await client.query(
+        'UPDATE products SET stock = stock - $1 WHERE id = $2 AND stock >= $1',
         [item.quantity, item.productId],
       );
+      if (result.rowCount === 0) {
+        throw new Error('Insufficient stock for product ' + item.productId);
+      }
     }
 
     await client.query('COMMIT');
@@ -211,7 +214,7 @@ export function Cacheable(ttl = 300) {
       const cache = new CacheService();
       const cacheKey = `${key}:${JSON.stringify(args)}`;
       const cached = await cache.get(cacheKey);
-      if (cached) return cached;
+      if (cached != null) return cached;
       const result = await original.apply(this, args);
       await cache.set(cacheKey, result, ttl);
       return result;

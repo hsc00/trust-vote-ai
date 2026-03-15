@@ -239,16 +239,19 @@ async def hybrid_search(
     keyword_subquery = keyword_subquery.limit(fetch_limit).subquery("keyword_results")
 
     # ===== 3. RECIPROCAL RANK FUSION =====
+    # Build RRF score expression first
+    rrf_score_expr = (
+        func.coalesce(1.0 / (K + vector_subquery.c.vector_rank), 0.0) +
+        func.coalesce(1.0 / (K + keyword_subquery.c.keyword_rank), 0.0)
+    ).label("rrf_score")
+
     rrf_query = (
         select(
             func.coalesce(
                 vector_subquery.c.id,
                 keyword_subquery.c.id
             ).label("chunk_id"),
-            (
-                func.coalesce(1.0 / (K + vector_subquery.c.vector_rank), 0.0) +
-                func.coalesce(1.0 / (K + keyword_subquery.c.keyword_rank), 0.0)
-            ).label("rrf_score"),
+            rrf_score_expr,
             vector_subquery.c.vector_distance,
             keyword_subquery.c.bm25_score
         )
@@ -259,7 +262,7 @@ async def hybrid_search(
                 full=True  # FULL OUTER JOIN
             )
         )
-        .order_by(rrf_query.c.rrf_score.desc())
+        .order_by(rrf_score_expr.desc())
         .limit(top_k)
     ).subquery("rrf_results")
 

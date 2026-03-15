@@ -4,16 +4,16 @@ OWASP Top 10, security best practices, and input validation.
 
 ## OWASP Top 10 (2025)
 
-1. **Broken Access Control** - Implement proper authorization checks
-2. **Cryptographic Failures** - Use strong encryption, secure storage
-3. **Injection** - Parameterized queries, input validation
-4. **Insecure Design** - Security by design, threat modeling
-5. **Security Misconfiguration** - Secure defaults, regular updates
-6. **Vulnerable Components** - Dependency scanning, updates
-7. **Authentication Failures** - Strong passwords, MFA, session management
-8. **Software and Data Integrity** - Code signing, supply chain security
-9. **Security Logging Failures** - Comprehensive logging, monitoring
-10. **Server-Side Request Forgery** - Input validation, allowlists
+1. **Broken Access Control** – Restrictions on what authenticated users are allowed to do are not properly enforced.
+2. **Cryptographic Failures** – Failures related to cryptography or the lack thereof, often leading to exposure of sensitive data.
+3. **Injection** – Untrusted data is sent to an interpreter as part of a command or query, tricking the interpreter into executing unintended commands.
+4. **Insecure Design** – Missing or ineffective security controls due to insecure design patterns or lack of threat modeling.
+5. **Security Misconfiguration** – Incomplete or ad hoc configurations, open cloud storage, misconfigured HTTP headers, and verbose error messages.
+6. **Vulnerable and Outdated Components** – Using components with known vulnerabilities, unsupported software, or outdated libraries.
+7. **Identification and Authentication Failures** – Failures related to authentication or session management, allowing attackers to compromise passwords, keys, or session tokens.
+8. **Software and Data Integrity Failures** – Code and infrastructure that do not protect against integrity violations, such as unsigned code or insecure CI/CD pipelines.
+9. **Security Logging and Monitoring Failures** – Insufficient logging, detection, monitoring, and active response, allowing attackers to further attack systems, maintain persistence, pivot to more systems, or tamper, extract, or destroy data.
+10. **Server-Side Request Forgery (SSRF)** – Web applications fetch remote resources without validating the user-supplied URL, allowing attackers to coerce the application to send requests to unintended destinations.
 
 ## Input Validation
 
@@ -29,6 +29,9 @@ OWASP Top 10, security best practices, and input validation.
 **Type Validation:**
 
 ```python
+class ValidationError(Exception):
+    pass
+
 def validate_user_id(user_id: str) -> int:
     try:
         return int(user_id)
@@ -121,9 +124,8 @@ Why this is the safe pattern:
 
 ## Password Security
 
-- Use Argon2id for password hashing
-- Minimum 12 characters, complexity requirements
-- Never store plaintext passwords
+- Require passwords to be at least 12 characters long; do not rely on arbitrary complexity rules. Enforce blocklists for breached or common passwords, and require multi-factor authentication (MFA) for account protection.
+- Never store plaintext passwords. Passwords must be hashed with a strong adaptive algorithm (e.g., bcrypt or Argon2) and salted.
 - Implement password reset securely
 - Rate limit login attempts
 
