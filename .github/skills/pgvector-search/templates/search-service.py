@@ -35,15 +35,15 @@ class SearchResult(BaseModel):
     """Single search result."""
     chunk_id: UUID
     content: str
-    section_title: str | None
-    section_path: str | None
+    section_title: str | None = None
+    section_path: str | None = None
     content_type: str
 
     # Scores
     rrf_score: float
     boosted_score: float
-    vector_distance: float | None
-    bm25_score: float | None
+    vector_distance: float | None = None
+    bm25_score: float | None = None
 
     # Metadata
 
@@ -76,7 +76,7 @@ class EmbeddingService(Protocol):
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from chunk-repository import ScoredChunk
+    from .chunk_repository import ScoredChunk
 
 class ChunkRepository(Protocol):
     """Chunk repository interface."""
@@ -184,31 +184,32 @@ def create_search_service(
 # ============================================================================
 
 if __name__ == "__main__":
-        # backend/app/api/v1/search.py (example usage)
-        from fastapi import APIRouter, Depends
-        from app.api.dependencies import get_chunk_repo, get_embedding_service
+    # backend/app/api/v1/search.py (example usage)
+    from fastapi import APIRouter, Depends
+    from typing import Annotated
+    from app.api.dependencies import get_chunk_repo, get_embedding_service
 
-        router = APIRouter(prefix="/api/v1/search")
+    router = APIRouter(prefix="/api/v1/search")
 
-        @router.post("/", response_model=SearchResponse)
-        async def search_chunks(
-                request: SearchQuery,
-                chunk_repo: ChunkRepository = Depends(get_chunk_repo),
-                embedding_service: EmbeddingService = Depends(get_embedding_service)
-        ):
-                """
-                Hybrid search endpoint.
+    @router.post("/", response_model=SearchResponse)
+    async def search_chunks(
+        request: SearchQuery,
+        chunk_repo: Annotated[ChunkRepository, Depends(get_chunk_repo)],
+        embedding_service: Annotated[EmbeddingService, Depends(get_embedding_service)]
+    ):
+        """
+        Hybrid search endpoint.
 
-                Example:
-                ```
-                POST /api/v1/search
-                {
-                    "query": "how to implement Redis caching",
-                    "top_k": 10,
-                    "content_type_filter": ["code_block", "paragraph"],
-                    "min_similarity": 0.75
-                }
-                ```
-                """
-                service = create_search_service(chunk_repo, embedding_service)
-                return await service.search(request)
+        Example:
+        ```
+        POST /api/v1/search
+        {
+            "query": "how to implement Redis caching",
+            "top_k": 10,
+            "content_type_filter": ["code_block", "paragraph"],
+            "min_similarity": 0.75
+        }
+        ```
+        """
+        service = create_search_service(chunk_repo, embedding_service)
+        return await service.search(request)

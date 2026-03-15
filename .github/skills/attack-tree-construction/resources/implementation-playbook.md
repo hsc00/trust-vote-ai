@@ -146,8 +146,8 @@ class AttackNode:
             },
             "mitigations": self.mitigations,
             "cve_refs": self.cve_refs,
-            "requires_insider": self.requires_insider,
-            "requires_physical": self.requires_physical,
+            "requires_insider": self.attributes.get("requires_insider"),
+            "requires_physical": self.attributes.get("requires_physical"),
             "children": [c.to_dict() for c in self.children]
         }
 

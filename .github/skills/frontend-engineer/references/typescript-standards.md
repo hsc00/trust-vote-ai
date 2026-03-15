@@ -10,6 +10,7 @@
 ## Example
 
 ```typescript
+import type { FC } from 'react';
 import type { User } from '~types/user';
 
 interface MyComponentProps {
@@ -19,8 +20,8 @@ interface MyComponentProps {
   onAction?: () => void;
 }
 
-// Note: Using React.FC is optional. Instead of the following:
-export const MyComponent: React.FC<MyComponentProps> = ({ userId, onAction }) => {
+// Note: Using React.FC is optional. The following are alternative ways to define a component—choose one or the other; do not export both MyComponent variants in the same module.
+export const MyComponent: FC<MyComponentProps> = ({ userId, onAction }) => {
   // Implementation
 };
 

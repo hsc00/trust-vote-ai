@@ -1,5 +1,5 @@
-import html
 #!/usr/bin/env python3
+import html
 """
 Generate comprehensive report of data validation results.
 
@@ -16,6 +16,7 @@ from typing import Dict, List, Any, Optional
 
 
 class ValidationReportGenerator:
+    HTML_DIV_CLOSE = "</div>"
     """Generates comprehensive validation reports."""
 
     def __init__(self):
@@ -137,8 +138,6 @@ class ValidationReportGenerator:
     def generate_markdown_report(self) -> str:
         """Generate Markdown report."""
         summary = self.generate_summary()
-
-
         md = []
         md.append("# Data Validation Report")
         md.append(f"\n**Table:** {self.metadata.get('table', 'Unknown')}")
@@ -165,53 +164,11 @@ class ValidationReportGenerator:
 
         # Issues section
         if summary['failed'] > 0:
-            md.append("## Issues Identified\n")
-
-            if summary['critical_issues'] > 0:
-                md.append("### Critical Issues\n")
-                md.extend([
-                    f"- **{issue['rule']}** on column `{issue['column']}`"
-                    for issue in summary['issues'] if issue['severity'] == 'critical'
-                ])
-                md.append("")
-
-            if summary['high_issues'] > 0:
-                md.append("### High Priority Issues\n")
-                md.extend([
-                    f"- **{issue['rule']}** on column `{issue['column']}`"
-                    for issue in summary['issues'] if issue['severity'] == 'high'
-                ])
-                md.append("")
-
-            if summary['medium_issues'] > 0:
-                md.append("### Medium Priority Issues\n")
-                md.extend([
-                    f"- **{issue['rule']}** on column `{issue['column']}`"
-                    for issue in summary['issues'] if issue['severity'] == 'medium'
-                ])
-                md.append("")
+            md.extend(self._render_issues_section(summary))
 
         # Detailed results
         if summary['failed'] > 0:
-            md.append("## Detailed Validation Results\n")
-            for result in self.results:
-                if not result.get("valid", False):
-                    details = result.get("details", {})
-                    rule = details.get("rule", "unknown")
-                    column = details.get("column", "N/A")
-
-                    md.append(f"### {rule.replace('_', ' ').title()} - {column}\n")
-
-                    if "error" in details:
-                        md.append(f"**Error:** {details['error']}\n")
-                    elif rule == "not_null":
-                        md.append(f"**Issue:** Found {details.get('null_count', 0)} NULL values\n")
-                    elif rule == "unique":
-                        md.append(f"**Issue:** Found {details.get('duplicate_count', 0)} "
-                                f"duplicate groups\n")
-                    elif rule == "range":
-                        md.append(f"**Issue:** {details.get('out_of_range_count', 0)} values "
-                                f"outside range [{details.get('min')}, {details.get('max')}]\n")
+            md.extend(self._render_detailed_results())
 
         # Recommendations
         md.append("## Recommendations\n")
@@ -231,12 +188,55 @@ class ValidationReportGenerator:
 
         return "\n".join(md)
 
+    def _render_issues_section(self, summary) -> list:
+        md = ["## Issues Identified\n"]
+        if summary['critical_issues'] > 0:
+            md.append("### Critical Issues\n")
+            md.extend([
+                f"- **{issue['rule']}** on column `{issue['column']}`"
+                for issue in summary['issues'] if issue['severity'] == 'critical'
+            ])
+            md.append("")
+        if summary['high_issues'] > 0:
+            md.append("### High Priority Issues\n")
+            md.extend([
+                f"- **{issue['rule']}** on column `{issue['column']}`"
+                for issue in summary['issues'] if issue['severity'] == 'high'
+            ])
+            md.append("")
+        if summary['medium_issues'] > 0:
+            md.append("### Medium Priority Issues\n")
+            md.extend([
+                f"- **{issue['rule']}** on column `{issue['column']}`"
+                for issue in summary['issues'] if issue['severity'] == 'medium'
+            ])
+            md.append("")
+        return md
+
+    def _render_detailed_results(self) -> list:
+        md = ["## Detailed Validation Results\n"]
+        for result in self.results:
+            if not result.get("valid", False):
+                details = result.get("details", {})
+                rule = details.get("rule", "unknown")
+                column = details.get("column", "N/A")
+                md.append(f"### {rule.replace('_', ' ').title()} - {column}\n")
+                if "error" in details:
+                    md.append(f"**Error:** {details['error']}\n")
+                elif rule == "not_null":
+                    md.append(f"**Issue:** Found {details.get('null_count', 0)} NULL values\n")
+                elif rule == "unique":
+                    md.append(f"**Issue:** Found {details.get('duplicate_count', 0)} duplicate groups\n")
+                elif rule == "range":
+                    md.append(f"**Issue:** {details.get('out_of_range_count', 0)} values outside range [{details.get('min')}, {details.get('max')}]\n")
+        return md
+
     def generate_html_report(self) -> str:
         """Generate HTML report."""
         summary = self.generate_summary()
         stats = self.metadata.get("statistics", {})
 
-        html = [
+        html_parts = [
             "<!DOCTYPE html>",
             "<html>",
             "<head>",
@@ -273,52 +273,52 @@ class ValidationReportGenerator:
         ]
 
         # Summary metrics
-        html.append("<h2>Summary</h2>")
-        html.append("<div class='summary'>")
-        html.append(f"<div class='metric'><div class='value'>{html.escape(str(summary['total']))}</div><div class='label'>Total Checks</div></div>")
-        html.append(f"<div class='metric'><div class='value success'>{html.escape(str(summary['passed']))}</div><div class='label'>Passed</div></div>")
-        html.append(f"<div class='metric'><div class='value critical'>{html.escape(str(summary['failed']))}</div><div class='label'>Failed</div></div>")
-        html.append(f"<div class='metric'><div class='value'>{html.escape(f'{summary['pass_rate']:.1f}') }%</div><div class='label'>Pass Rate</div></div>")
-        html.append("</div>")
+        html_parts.append("<h2>Summary</h2>")
+        html_parts.append("<div class='summary'>")
+        html_parts.append(f"<div class='metric'><div class='value'>{html.escape(str(summary['total']))}</div><div class='label'>Total Checks</div></div>")
+        html_parts.append(f"<div class='metric'><div class='value success'>{html.escape(str(summary['passed']))}</div><div class='label'>Passed</div></div>")
+        html_parts.append(f"<div class='metric'><div class='value critical'>{html.escape(str(summary['failed']))}</div><div class='label'>Failed</div></div>")
+        html_parts.append(f"<div class='metric'><div class='value'>{html.escape(f'{summary['pass_rate']:.1f}') }%</div><div class='label'>Pass Rate</div></div>")
+        html_parts.append(self.HTML_DIV_CLOSE)
 
         # Table statistics
         if stats and "error" not in stats:
-            html.append("<h2>Table Statistics</h2>")
-            html.append("<table>")
-            html.append("<tr><th>Metric</th><th>Value</th></tr>")
-            html.append(f"<tr><td>Total Rows</td><td>{html.escape(str(stats.get('row_count', 'N/A')))}</td></tr>")
-            html.append(f"<tr><td>Total Columns</td><td>{html.escape(str(stats.get('column_count', 'N/A')))}</td></tr>")
-            html.append("</table>")
+            html_parts.append("<h2>Table Statistics</h2>")
+            html_parts.append("<table>")
+            html_parts.append("<tr><th>Metric</th><th>Value</th></tr>")
+            html_parts.append(f"<tr><td>Total Rows</td><td>{html.escape(str(stats.get('row_count', 'N/A')))}</td></tr>")
+            html_parts.append(f"<tr><td>Total Columns</td><td>{html.escape(str(stats.get('column_count', 'N/A')))}</td></tr>")
+            html_parts.append("</table>")
 
         # Issues
         if summary['failed'] > 0:
-            html.append("<h2>Issues</h2>")
-            html.append("<div class='issue-list'>")
+            html_parts.append("<h2>Issues</h2>")
+            html_parts.append("<div class='issue-list'>")
 
             for issue in summary['issues']:
                 severity_class = issue['severity']
-                html.append(
+                html_parts.append(
                     f"<div class='issue'>"
                     f"<span class='{html.escape(severity_class)}'>{html.escape(issue['severity'].upper())}</span>: "
                     f"<strong>{html.escape(str(issue['rule']))}</strong> on column <code>{html.escape(str(issue['column']))}</code>"
                     f"</div>"
                 )
 
-            html.append("</div>")
+            html_parts.append(self.HTML_DIV_CLOSE)
         else:
-            html.append("<h2>Results</h2>")
-            html.append("<p class='success'>✅ All validations passed!</p>")
+            html_parts.append("<h2>Results</h2>")
+            html_parts.append("<p class='success'>✅ All validations passed!</p>")
 
         # Footer
-        html.append("<div class='footer'>")
-        html.append("<p>Report generated by Data Validation Engine</p>")
-        html.append("</div>")
+        html_parts.append("<div class='footer'>")
+        html_parts.append("<p>Report generated by Data Validation Engine</p>")
+        html_parts.append(self.HTML_DIV_CLOSE)
 
-        html.append("</div>")
-        html.append("</body>")
-        html.append("</html>")
+        html_parts.append(self.HTML_DIV_CLOSE)
+        html_parts.append("</body>")
+        html_parts.append("</html>")
 
-        return "\n".join(html)
+        return "\n".join(html_parts)
 
 
 def main():

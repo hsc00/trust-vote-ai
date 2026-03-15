@@ -195,7 +195,7 @@ Core technologies, frameworks, databases, and message queues for modern backend 
 ## Common Pitfalls
 
 1. **Choosing NoSQL for relational data** - Use PostgreSQL if data has clear relationships
-2. **Not using connection pooling** - Implement pooling for 5-10x performance boost
+2. **Not using connection pooling** - Implement pooling: can improve throughput by several-fold depending on workload characteristics, connection overhead/latency, database, pool sizing/configuration, and DB driver behavior. See [PostgreSQL pooling benchmarks](https://www.psycopg.org/articles/2023/12/13/psycopg3-pool-benchmarks/) and [general guidance](https://www.cockroachlabs.com/blog/sql-connection-pooling/).
 3. **Ignoring indexes** - Add indexes to frequently queried columns
 4. **Over-engineering with microservices** - Start monolith, split when needed
 5. **Not caching** - Redis caching provides significant DB load reduction

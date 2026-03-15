@@ -2,7 +2,9 @@
 
 ## Layout with Metadata
 
-> **Note:** The following pattern requires Next.js 15+ (Oct 2024) and the async cookies() API. The use of `cookieStore`, `sessionId`, `cookies()`, and `redirect()` in this example depends on the newer runtime and will not work on earlier Next.js versions.
+## Server Actions
+
+> **Note:** The following pattern requires Next.js 15+ (Oct 2024) and the async cookies() API. The use of `cookieStore`, `sessionId`, `cookies()`, and `redirect()` in this example depends on the newer runtime and will not work on earlier Next.js versions. These APIs are only used in the Server Actions example below.
 
 ```typescript
 // app/layout.tsx
@@ -50,7 +52,7 @@ export async function ProductList({ category, sort, page }: ProductFilters) {
   const params: Record<string, string> = {};
   if (category !== undefined) params.category = category;
   if (sort !== undefined) params.sort = sort;
-  if (page !== undefined) params.page = page;
+  if (page !== undefined) params.page = String(page);
   const res = await fetch(
     `${process.env.API_URL}/products?${new URLSearchParams(params)}`,
     { next: { tags: ['products'] } }
@@ -312,7 +314,7 @@ export async function POST(request: NextRequest) {
     name.length > 100 ||
     typeof price !== 'number' ||
     price < 0 ||
-    (description && typeof description !== 'string')
+    (description !== undefined && description !== null && typeof description !== 'string')
   ) {
     return NextResponse.json({ error: 'Invalid product data' }, { status: 422 });
   }
