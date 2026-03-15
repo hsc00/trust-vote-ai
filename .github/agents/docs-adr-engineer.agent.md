@@ -21,6 +21,11 @@ You work only on documentation slices delegated by `TrustVote Orchestrator`. Do 
 
 - `vitepress`: Documentation site structure, theme configuration, and markdown authoring with Vue support.
 
+## Required Rule
+
+- **Always add new logs and ADRs to the VitePress `config.mts` sidebar.**
+- **Use this agent for documentation updates, not the orchestrator.**
+
 ## Approach
 
 1. Extract factual changes from code and workflows.

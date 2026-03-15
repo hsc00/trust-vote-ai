@@ -63,6 +63,10 @@ export default defineConfig({
             text: '12. Frontend Framework',
             link: '/architecture/12-frontend-framework',
           },
+          {
+            text: '13. Agentic Workflow & Orchestrator Model',
+            link: '/architecture/13-agentic-workflow-orchestrator',
+          },
         ],
       },
       {
@@ -95,6 +99,14 @@ export default defineConfig({
           {
             text: '7. Cryptographic Integrity',
             link: '/logs/7-cryptographic-integrity',
+          },
+          {
+            text: '8. Agentic Workflow',
+            link: '/logs/8-agentic-workflow',
+          },
+          {
+            text: '9. Dependency Remediation',
+            link: '/logs/9-dependency-remediation',
           },
         ],
       },
