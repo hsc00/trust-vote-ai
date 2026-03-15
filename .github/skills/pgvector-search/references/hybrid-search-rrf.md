@@ -152,7 +152,7 @@ class SearchService:
             .select_from(
                 vector_subq.outerjoin(keyword_subq, vector_subq.c.id == keyword_subq.c.id, full=True)
             )
-            .order_by("rrf_score DESC")
+            .order_by(rrf_subq.c.rrf_score.desc())
             .limit(top_k)
             .subquery()
         )

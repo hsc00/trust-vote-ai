@@ -216,7 +216,7 @@
     },
     "tier_3_specific": {
       "files": "SKILL.md#section",
-      "tokens": "120-250 each",
+      "tokens": { "min": 120, "max": 250 },
       "use_when": "Need specific implementation (e.g., RRF algorithm, indexing)"
     },
     "tier_4_implementation": {

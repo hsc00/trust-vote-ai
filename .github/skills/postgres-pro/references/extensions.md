@@ -239,10 +239,12 @@ WHERE email = 'user@example.com'
 SELECT gen_random_uuid();
 SELECT gen_random_bytes(32);
 
--- Encrypt/decrypt data
+
+-- Encrypt/decrypt data (use parameter placeholders for keys)
+-- SECURITY NOTE: Always supply encryption keys via prepared statement parameters (e.g., $1) or secure configuration, never hardcoded in SQL.
 SELECT
-  pgp_sym_encrypt('sensitive data', 'encryption-key'),
-  pgp_sym_decrypt(encrypted_column, 'encryption-key')
+  pgp_sym_encrypt('sensitive data', $1),
+  pgp_sym_decrypt(encrypted_column, $1)
 FROM table_name;
 
 -- Digest functions

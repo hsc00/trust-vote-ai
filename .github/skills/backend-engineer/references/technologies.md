@@ -68,7 +68,7 @@ Core technologies, frameworks, databases, and message queues for modern backend 
 **Popular Frameworks:**
 
 - **Axum** - Ergonomic, modular, tokio-based
-- **Actix-web** - Fastest web framework
+- **Actix-web** - High-performance web framework
 - **Rocket** - Type-safe, easy to use
 
 **When to Choose:** Maximum performance needed, memory safety critical, low-level control required

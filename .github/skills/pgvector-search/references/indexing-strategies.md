@@ -36,7 +36,7 @@ WITH (lists = 100);
 
 ### Performance
 
-```
+```text
 Dataset: 100k vectors (1024 dims)
 Index size: ~400 MB
 Index time: ~2 minutes
@@ -78,7 +78,7 @@ WITH (m = 16, ef_construction = 64);
 
 ### Performance
 
-```
+```text
 Dataset: 100k vectors (1024 dims)
 Index size: ~800 MB
 Index time: ~20 minutes

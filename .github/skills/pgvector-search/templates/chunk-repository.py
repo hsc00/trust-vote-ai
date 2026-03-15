@@ -1,3 +1,15 @@
+from dataclasses import dataclass
+# ============================================================================
+# SCORED CHUNK DATACLASS
+# ============================================================================
+
+@dataclass
+class ScoredChunk:
+    chunk: Chunk
+    rrf_score: float
+    boosted_score: float
+    vector_distance: float
+    bm25_score: float
 """
 Production-ready chunk repository with hybrid search (PGVector + BM25 + RRF).
 
@@ -9,31 +21,33 @@ Features:
 - Full test coverage
 """
 
-from typing import Protocol
 from uuid import UUID
-from sqlalchemy import select, func, literal
+from sqlalchemy import select, func, literal, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import declarative_base
 from pgvector.sqlalchemy import Vector
 import structlog
 
 logger = structlog.get_logger()
 
 
-# ============================================================================
-# DOMAIN MODELS
-# ============================================================================
+# ==========================================================================
+# DOMAIN MODELS (SQLAlchemy Declarative)
+# ==========================================================================
 
-class Chunk(Protocol):
-    """Chunk domain model."""
-    id: UUID
-    document_id: UUID
-    content: str
-    embedding: list[float]
-    content_tsvector: str  # PostgreSQL tsvector type
-    section_title: str | None
-    section_path: str | None
-    content_type: str
-    chunk_index: int
+Base = declarative_base()
+
+class Chunk(Base):
+    __tablename__ = "chunks"
+    id = Column(String, primary_key=True)
+    document_id = Column(String, ForeignKey("documents.id"))
+    content = Column(String)
+    embedding = Column(Vector(1024))
+    content_tsvector = Column(String)  # Should be tsvector in real schema
+    section_title = Column(String, nullable=True)
+    section_path = Column(String, nullable=True)
+    content_type = Column(String)
+    chunk_index = Column(Integer)
 
 
 # ============================================================================
@@ -43,7 +57,7 @@ class Chunk(Protocol):
 class ChunkRepository:
     """Repository for chunk operations with hybrid search."""
 
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
     async def hybrid_search(
@@ -86,7 +100,7 @@ class ChunkRepository:
                 Chunk.id,
                 Chunk.embedding.cosine_distance(query_embedding).label("vector_distance"),
                 func.row_number().over(
-                    order_by=Chunk.embedding.cosine_distance(query_embedding)
+        fetch_limit = top_k * HYBRID_FETCH_MULTIPLIER
                 ).label("vector_rank")
             )
             .where(Chunk.embedding.isnot(None))
@@ -147,10 +161,15 @@ class ChunkRepository:
                 vector_subquery.outerjoin(
                     keyword_subquery,
                     vector_subquery.c.id == keyword_subquery.c.id,
-                    full=True  # Include results from EITHER search
+        K = RRF_K_CONSTANT  # RRF smoothing constant (empirically optimal)
                 )
             )
-            .order_by(literal("rrf_score").desc())
+            .order_by(
+                (
+                    func.coalesce(1.0 / (K + vector_subquery.c.vector_rank), 0.0) +
+                    func.coalesce(1.0 / (K + keyword_subquery.c.keyword_rank), 0.0)
+                ).desc()
+            )
             .limit(top_k * 2)  # Fetch extra for boosting
         ).subquery("rrf_results")
 
@@ -170,26 +189,27 @@ class ChunkRepository:
         rows = result.all()
 
         # Apply metadata boosting
-        boosted_chunks = []
+        boosted_chunks: list[ScoredChunk] = []
         for chunk, rrf_score, vector_distance, bm25_score in rows:
             boosted_score = self._apply_boosting(chunk, query, rrf_score)
 
-            # Attach scores to chunk for inspection
-            chunk._rrf_score = rrf_score
-            chunk._boosted_score = boosted_score
-            chunk._vector_distance = vector_distance
-            chunk._bm25_score = bm25_score
-
-            boosted_chunks.append((chunk, boosted_score))
+            scored = ScoredChunk(
+                chunk=chunk,
+                rrf_score=rrf_score,
+                boosted_score=boosted_score,
+                vector_distance=vector_distance if vector_distance is not None else 1.0,
+                bm25_score=bm25_score if bm25_score is not None else 0.0,
+            )
+            boosted_chunks.append(scored)
 
         # Re-sort by boosted scores and take top_k
-        boosted_chunks.sort(key=lambda x: x[1], reverse=True)
-        final_chunks = [c for c, _ in boosted_chunks[:top_k]]
+        boosted_chunks.sort(key=lambda x: x.boosted_score, reverse=True)
+        final_chunks = [sc.chunk for sc in boosted_chunks[:top_k]]
 
         logger.info(
             "hybrid_search completed",
             results_count=len(final_chunks),
-            top_score=boosted_chunks[0][1] if boosted_chunks else 0.0
+            top_score=boosted_chunks[0].boosted_score if boosted_chunks else 0.0
         )
 
         return final_chunks

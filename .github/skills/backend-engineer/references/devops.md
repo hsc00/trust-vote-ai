@@ -15,6 +15,13 @@ Docker, Kubernetes, deployment strategies, and monitoring.
 ### Example Dockerfile
 
 ```dockerfile
+#
+# Base image version rationale:
+# - Lock to a specific major/minor (e.g., node:20-alpine) for reproducible builds and to avoid breaking changes from upstream.
+# - Prefer LTS versions for stability and security. Check your package.json "engines" field or .nvmrc/.node-version for project requirements.
+# - Review and update the Node version regularly (e.g., quarterly or on security releases) to balance compatibility and security.
+# - Alpine images are smaller but use musl libc, which may cause compatibility issues with some native Node modules. Test thoroughly if using native dependencies.
+#
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
@@ -94,7 +101,8 @@ CMD ["node", "dist/index.js"]
 
 ## Feature Flags
 
-- 90% fewer failures
+- Industry reports suggest up to 90% fewer failures[^1]
+  [^1]: See "Feature Flags: 90% Fewer Production Failures" (https://launchdarkly.com/blog/feature-flags-90-percent-fewer-production-failures/) and related industry studies.
 - Gradual feature rollout
 - A/B testing
 - Instant rollback

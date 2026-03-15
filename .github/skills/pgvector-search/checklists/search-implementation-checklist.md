@@ -259,7 +259,7 @@ async def hybrid_search(
                 full=True  # FULL OUTER JOIN
             )
         )
-        .order_by(literal("rrf_score").desc())
+        .order_by(rrf_query.c.rrf_score.desc())
         .limit(top_k)
     ).subquery("rrf_results")
 

@@ -17,9 +17,17 @@ export const pool = new Pool({
   connectionTimeoutMillis: 2_000,
 });
 
+let dbHealthy = true;
+function markPoolUnhealthy() {
+  dbHealthy = false;
+  // Optionally emit a shutdown event or call a graceful shutdown function
+  if (typeof gracefulShutdown === 'function') gracefulShutdown();
+}
+
 pool.on('error', (err) => {
   console.error('DB pool error', err);
-  process.exit(-1);
+  markPoolUnhealthy();
+  // Do not exit immediately; allow for graceful draining and possible recovery
 });
 
 export const closeDatabase = () => pool.end();
@@ -55,8 +63,14 @@ export class UserRepository {
   }
 
   async update(id: string, updates: Record<string, unknown>) {
+    const ALLOWED = ['name', 'email', 'password']; // Add permitted columns only
     const fields = Object.keys(updates);
-    const values = Object.values(updates);
+    for (const key of fields) {
+      if (!ALLOWED.includes(key)) {
+        throw new Error(`Invalid update field: ${key}`);
+      }
+    }
+    const values = fields.map((f) => updates[f]);
     const set = fields.map((f, i) => `${f} = $${i + 2}`).join(', ');
     const { rows } = await this.db.query(
       `UPDATE users SET ${set}, updated_at = NOW() WHERE id = $1 RETURNING *`,
@@ -174,8 +188,18 @@ export class CacheService {
   }
 
   async invalidatePattern(pattern: string) {
-    const keys = await redis.keys(pattern);
-    if (keys.length) await redis.del(...keys);
+    let cursor = '0';
+    const batchSize = 500;
+    do {
+      const [nextCursor, keys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', batchSize);
+      cursor = nextCursor;
+      if (keys.length) {
+        for (let i = 0; i < keys.length; i += batchSize) {
+          const batch = keys.slice(i, i + batchSize);
+          await redis.del(...batch);
+        }
+      }
+    } while (cursor !== '0');
   }
 }
 

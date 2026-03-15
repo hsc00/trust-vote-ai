@@ -6,10 +6,11 @@ This script allows users to define and customize validation rules for database t
 which are then saved in a configuration file for use by other validation scripts.
 """
 
+
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -62,7 +63,11 @@ class ValidationRuleConfigurator:
             column: Column name
             min_value: Minimum allowed value
             max_value: Maximum allowed value
+        Raises:
+            ValueError: If min_value > max_value
         """
+        if min_value > max_value:
+            raise ValueError(f"min_value ({min_value}) cannot be greater than max_value ({max_value}) for column '{column}'")
         self.rules.append({
             "rule": "range",
             "column": column,
@@ -126,7 +131,7 @@ class ValidationRuleConfigurator:
         return {
             "table": self.table_name,
             "database": self.database,
-            "created_at": datetime.now().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "validations": self.rules
         }
 

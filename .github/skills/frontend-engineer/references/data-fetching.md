@@ -12,7 +12,7 @@
 - Create `features/{feature}/api/{feature}Api.ts`
 - Use `apiClient` axios instance
 - Centralized methods per feature
-- Route format: `/form/route` (NOT `/api/form/route`)
+- Route format: `/feature/route` (NOT `/api/feature/route`)
 
 ## Examples
 
@@ -84,11 +84,14 @@ export const Route = createFileRoute('/votes/$voteId')({
 
 function VoteDetailPage() {
     const { voteId } = Route.useParams();
-
+    const parsedId = Number(voteId);
+    if (isNaN(parsedId)) {
+        return <div>Invalid vote ID</div>;
+    }
     return (
         // SuspenseLoader renders a fade-in skeleton while VoteDetail fetches.
         <SuspenseLoader>
-            <VoteDetail voteId={Number(voteId)} />
+            <VoteDetail voteId={parsedId} />
         </SuspenseLoader>
     );
 }

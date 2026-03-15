@@ -23,7 +23,9 @@ Implement and enforce data integrity rules at the database level using CHECK con
 
 ## Instructions
 
-1. Audit existing data quality by running validation queries before adding constraints. Check for NULL values in columns that should be required: `SELECT column_name, COUNT(*) FILTER (WHERE column_name IS NULL) AS null_count, COUNT(*) AS total FROM table_name GROUP BY column_name`.
+1. Audit existing data quality by running validation queries before adding constraints. Check for NULL values in columns that should be required. For each column, run:
+   `SELECT 'my_col' AS col, COUNT(*) FILTER (WHERE my_col IS NULL) AS null_count, COUNT(*) AS total FROM table_name;`
+   Replace `my_col` with the actual column name. Repeat for each required column.
 
 2. Detect orphaned records (broken referential integrity): `SELECT c.id FROM child_table c LEFT JOIN parent_table p ON c.parent_id = p.id WHERE p.id IS NULL`. Document all orphaned records for cleanup or archival before adding foreign key constraints.
 

@@ -37,15 +37,33 @@ export function ContactForm() {
 
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      await fetch('/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       });
-      toast.success('Message sent!');
-      form.reset();
-    } catch {
+      if (response.ok) {
+        toast.success('Message sent!');
+        form.reset();
+      } else {
+        let errorMsg = `Failed to send message (status: ${response.status})`;
+        try {
+          const data = await response.json();
+          errorMsg += `: ${data.message || JSON.stringify(data)}`;
+        } catch {
+          // fallback: try text
+          try {
+            const text = await response.text();
+            if (text) errorMsg += `: ${text}`;
+          } catch {}
+        }
+        toast.error(errorMsg);
+        // Optionally log error
+        console.error(errorMsg);
+      }
+    } catch (err) {
       toast.error('Failed to send message');
+      console.error(err);
     }
   }
 
@@ -272,6 +290,12 @@ export function CrudModal({
   const [email, setEmail] = useState(item?.email ?? '');
   const [saving, setSaving] = useState(false);
 
+  // Synchronize state with item changes
+  React.useEffect(() => {
+    setName(item?.name ?? '');
+    setEmail(item?.email ?? '');
+  }, [item]);
+
   async function handleSave() {
     setSaving(true);
     try {
@@ -362,7 +386,7 @@ export function Navigation() {
           <ModeToggle />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Open menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>

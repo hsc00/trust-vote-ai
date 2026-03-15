@@ -175,7 +175,7 @@ CREATE INDEX idx_chunks_content_type ON chunks(content_type);
 
 ```python
 # backend/app/db/repositories/chunk_repository.py
-from sqlalchemy import select, func, literal
+from sqlalchemy import select, func, literal, col
 from pgvector.sqlalchemy import Vector
 
 async def hybrid_search(
@@ -262,7 +262,7 @@ async def hybrid_search(
                 full=True
             )
         )
-        .order_by(literal("rrf_score").desc())
+        .order_by(col("rrf_score").desc())
         .limit(top_k)
     ).subquery("rrf_results")
 

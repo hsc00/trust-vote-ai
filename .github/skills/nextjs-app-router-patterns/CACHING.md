@@ -16,20 +16,40 @@ fetch(url, { next: { tags: ['products'] } });
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function updateProduct(id: string, data: ProductData) {
-  const updated = await db.product.update({
-    where: { id },
-    data,
-    select: { id: true, updatedAt: true },
-  });
-
-  if (!updated?.id) {
-    return { error: 'Update failed' };
+  // Basic input validation (customize as needed)
+  if (!id || typeof id !== 'string') {
+    return { error: 'Invalid product ID' };
   }
+  if (!data || typeof data !== 'object') {
+    return { error: 'Invalid data object' };
+  }
+  // Example: check required fields (customize for your schema)
+  if (!data.name || typeof data.name !== 'string' || data.name.length > 100) {
+    return { error: 'Invalid or missing product name' };
+  }
+  // Add more field/type/length checks as needed
 
-  revalidateTag('products');
-  revalidatePath('/products');
-  revalidatePath(`/products/${id}`);
-  return { success: true };
+  try {
+    const updated = await db.product.update({
+      where: { id },
+      data,
+      select: { id: true, updatedAt: true },
+    });
+
+    if (!updated?.id) {
+      return { error: 'Product not found or update failed' };
+    }
+
+    revalidateTag('products');
+    revalidatePath('/products');
+    revalidatePath(`/products/${id}`);
+    return { success: true };
+  } catch (err) {
+    return {
+      error: 'Exception during update',
+      message: err instanceof Error ? err.message : String(err),
+    };
+  }
 }
 ```
 
@@ -68,15 +88,19 @@ export async function safeUpdateProduct(id: string, data: ProductData) {
       select: { id: true, updatedAt: true },
     });
 
+    // Assumption: updatedAt is auto-updated by the DB on every mutation.
+    // If your schema does not guarantee this, use a version/rowVersion column or check the DB's affected-rows/returning count for reliable change detection.
+    // The following check treats no-change updates as errors based on updatedAt:
     if (!after?.id || after.updatedAt.getTime() === before.updatedAt.getTime()) {
-      return { error: 'No persisted change detected' };
+      return { error: 'No persisted change detected (updatedAt unchanged; see note above)' };
     }
 
     revalidateTag('products');
     revalidateTag(`product:${id}`);
     return { success: true };
-  } catch {
-    return { error: 'Mutation failed' };
+  } catch (err) {
+    console.error('safeUpdateProduct error:', err);
+    return { error: 'Mutation failed', message: err instanceof Error ? err.message : String(err) };
   }
 }
 ```
@@ -110,8 +134,15 @@ export async function transferInventory(fromId: string, toId: string, quantity: 
     revalidateTag(`product:${fromId}`);
     revalidateTag(`product:${toId}`);
     return { success: true };
-  } catch {
-    return { error: 'Transfer failed, transaction rolled back' };
+  } catch (err) {
+    if (err instanceof Error && err.message === 'NEGATIVE_STOCK') {
+      return { error: 'NEGATIVE_STOCK' };
+    }
+    console.error('transferInventory error:', err);
+    return {
+      error: 'Transfer failed, transaction rolled back',
+      cause: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 ```

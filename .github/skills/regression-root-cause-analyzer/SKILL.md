@@ -29,10 +29,10 @@ A regression has one advantage over a greenfield bug: somewhere in history there
 
 `git bisect` is log₂(N), so even 1000 commits is 10 runs. Automate if the oracle is scriptable:
 
-```
+````bash
 git bisect start <bad> <good>
 git bisect run ./oracle.sh
-```
+```bash
 
 Where `oracle.sh` exits 0 when the regression is **absent** and non-zero when **present**. If the oracle is manual (visual check), you're doing it by hand — still only ~10 iterations.
 
@@ -59,19 +59,19 @@ Bisect gives you a SHA. Now engage: `git show <sha>`. You're looking for **which
 
 **Input:** `test_admin_can_delete_user` passes on `v3.1.0`, fails on `main` (400 commits later).
 
-```
+```bash
 git bisect start main v3.1.0
 git bisect run pytest tests/test_admin.py::test_admin_can_delete_user -x
-```
+```bash
 
 9 iterations. Guilty: `a3f91c2 — Refactor permission middleware`.
 
 `git show a3f91c2` — 200-line diff across 4 files. Revert files one at a time:
 
-```
+```bash
 git checkout a3f91c2 -- src/middleware/perms.py && pytest ... -x   # still red
 git checkout a3f91c2^ -- src/middleware/perms.py && pytest ... -x  # green
-```
+```bash
 
 Fault is in `perms.py`. Inspect its hunk: `ADMIN in user.roles` became `user.role == ADMIN` during the refactor — but users have a _list_ of roles. One-character design shift, 200-line diff.
 
@@ -93,7 +93,7 @@ Fault is in `perms.py`. Inspect its hunk: `ADMIN in user.roles` became `user.rol
 
 ## Output format
 
-```
+```markdown
 ## Introducing commit
 <sha> — <subject>
 <author>, <date>
@@ -107,4 +107,5 @@ Fault is in `perms.py`. Inspect its hunk: `ADMIN in user.roles` became `user.rol
 
 ## Handoff
 → bug-to-patch-generator with <file>:<line>
-```
+```bash
+````

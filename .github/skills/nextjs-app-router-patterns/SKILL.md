@@ -35,7 +35,7 @@ export default async function Page() {
 ## Pattern Summaries
 
 1. `Layout + Metadata`: Define route metadata in `layout.tsx` and keep global wrappers minimal.
-2. `Server Component Data Fetching`: Parse `searchParams`, colocate fetches, and wrap slow segments in `Suspense`.
+2. `Server Component Data Fetching`: Await/resolve `searchParams` (Promise in Next.js 15), colocate fetches, and wrap slow segments in `Suspense`.
 3. `Server Actions`: Run mutation checkpoints, verify persistence, and use transactions for rollback-safe flows.
 4. `Client Component -> Server Action`: Trigger actions with `useTransition` and return typed success/error payloads.
 5. `Parallel Routes`: Use slot props in layout and isolated `loading.tsx` files for independent streams.

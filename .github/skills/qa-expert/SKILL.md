@@ -126,14 +126,15 @@ python scripts/calculate_metrics.py <path/to/TEST-EXECUTION-TRACKING.csv>
 - Quality gates status (✅/❌ for each gate)
 
 **Quality gates** (all must pass for release):
-| Gate | Target | Blocker |
-|------|--------|---------|
-| Test Execution | 100% | Yes |
-| Pass Rate | ≥80% | Yes |
-| P0 Bugs | 0 | Yes |
-| P1 Bugs | ≤5 | Yes |
-| Code Coverage | ≥80% | Yes |
-| Security | 90% OWASP | Yes |
+
+| Gate           | Target    | Blocker |
+| -------------- | --------- | ------- |
+| Test Execution | 100%      | Yes     |
+| Pass Rate      | ≥80%      | Yes     |
+| P0 Bugs        | 0         | Yes     |
+| P1 Bugs        | ≤5        | Yes     |
+| Code Coverage  | ≥80%      | Yes     |
+| Security       | 90% OWASP | Yes     |
 
 ### 6. Progress Reporting
 
@@ -261,42 +262,46 @@ Automation scripts for QA infrastructure:
 
 ### Pattern 1: Starting Fresh QA
 
-```
+````text
 1. python scripts/init_qa_project.py my-app ./
 2. Fill in BASELINE-METRICS.md (document current state)
 3. Write test cases using assets/templates/TEST-CASE-TEMPLATE.md
 4. Copy master prompt from references/master_qa_prompt.md
 5. Paste to LLM → autonomous execution begins
-```
+```text
 
 ### Pattern 2: LLM-Driven Testing (Autonomous)
 
-```
+```text
 1. Read references/master_qa_prompt.md
 2. Copy the single master prompt (one paragraph)
 3. Paste to LLM conversation
 4. LLM executes all 342 test cases over 5 weeks
 5. LLM updates tracking CSVs automatically
 6. LLM generates weekly reports automatically
-```
+```text
 
 ### Pattern 3: Adding Security Testing
 
-```
+````
+
 1. Read references/google_testing_standards.md (OWASP section)
 2. Write TC-SEC-XXX test cases for each OWASP threat
 3. Target 90% coverage (9/10 threats)
 4. Document mitigations in test cases
+
 ```
 
 ### Pattern 4: Third-Party QA Handoff
 
 ```
+
 1. Ensure all templates populated
 2. Verify BASELINE-METRICS.md complete
 3. Package tests/docs/ folder
 4. Include references/master_qa_prompt.md for autonomous execution
 5. QA team can start immediately (Day 1 onboarding → 5 weeks testing)
+
 ```
 
 ## Success Criteria
@@ -309,3 +314,4 @@ This skill is effective when:
 - ✅ Progress visible in real-time (CSV tracking)
 - ✅ Autonomous execution enabled (LLM can execute full plan)
 - ✅ Third-party QA teams can start testing immediately
+```

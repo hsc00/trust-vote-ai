@@ -118,7 +118,11 @@ password: string;
 
 ```typescript
 export class QueryDto {
-  @Transform(({ value }) => parseInt(value, 10))
+  @Transform(({ value }) => {
+    if (value == null || value === '') return undefined;
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? undefined : parsed;
+  })
   @IsInt()
   @Min(1)
   page: number = 1;
@@ -128,7 +132,11 @@ export class QueryDto {
   @IsOptional()
   search?: string;
 
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => {
+    if (value == null || value === '') return undefined;
+    if (typeof value === 'boolean') return value;
+    return value === 'true';
+  })
   @IsBoolean()
   isActive: boolean = true;
 }

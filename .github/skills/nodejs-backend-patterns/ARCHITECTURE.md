@@ -20,8 +20,14 @@ src/
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+
   createUser = asyncHandler(async (req, res) => {
-    const user = await this.userService.createUser(req.body as CreateUserDTO);
+    // Validate and sanitize input
+    const result = validateDto(CreateUserDTO, req.body);
+    if (!result.valid) {
+      return ApiResponse.error(res, result.errors, 400);
+    }
+    const user = await this.userService.createUser(result.value);
     ApiResponse.success(res, user, 'User created', 201);
   });
 
@@ -30,10 +36,24 @@ export class UserController {
     ApiResponse.success(res, user);
   });
 
+
   updateUser = asyncHandler(async (req, res) => {
-    const user = await this.userService.updateUser(req.params.id, req.body as UpdateUserDTO);
+    // Validate and sanitize input
+    const result = validateDto(UpdateUserDTO, req.body);
+    if (!result.valid) {
+      return ApiResponse.error(res, result.errors, 400);
+    }
+    const user = await this.userService.updateUser(req.params.id, result.value);
     ApiResponse.success(res, user);
   });
+// ...
+// Example validateDto utility (implementation depends on chosen validation library)
+function validateDto(DtoClass, data) {
+  // Use class-validator, joi, zod, or custom logic
+  // Return { valid: boolean, value: sanitized, errors?: any }
+  // This is a placeholder for illustration.
+  return { valid: true, value: data };
+}
 
   deleteUser = asyncHandler(async (req, res) => {
     await this.userService.deleteUser(req.params.id);
@@ -69,7 +89,12 @@ export class UserService {
   }
 
   async updateUser(id: string, updates: UpdateUserDTO): Promise<User> {
-    const user = await this.userRepository.update(id, updates);
+    // Hash password if present
+    let updatesToSave = { ...updates };
+    if (updates.password) {
+      updatesToSave.password = await bcrypt.hash(updates.password, 10);
+    }
+    const user = await this.userRepository.update(id, updatesToSave);
     if (!user) throw new NotFoundError('User not found');
     const { password: _, ...safe } = user;
     return safe as User;
@@ -85,36 +110,56 @@ export class UserService {
 
 ```typescript
 // di-container.ts
-class Container {
-  private readonly registry = new Map<string, () => unknown>();
+type Token<T> = symbol & { _type?: T };
 
-  register<T>(key: string, factory: () => T): void {
+class Container {
+  private readonly registry = new Map<Token<any>, () => any>();
+
+  register<T>(key: Token<T>, factory: () => T): void {
     this.registry.set(key, factory);
   }
 
-  singleton<T>(key: string, factory: () => T): void {
+  singleton<T>(key: Token<T>, factory: () => T): void {
     let instance: T;
     this.registry.set(key, () => (instance ??= factory()));
   }
 
-  resolve<T>(key: string): T {
+  resolve<T>(key: Token<T>): T {
     const factory = this.registry.get(key);
-    if (!factory) throw new Error(`Nothing registered for "${key}"`);
-    return factory() as T;
+    if (!factory) throw new Error(`Nothing registered for token`);
+    return factory();
   }
 }
+
+// Token definitions
+export const TOKENS = {
+  db: Symbol('db') as Token<Pool>,
+  userRepository: Symbol('userRepository') as Token<UserRepository>,
+  userService: Symbol('userService') as Token<UserService>,
+  authService: Symbol('authService') as Token<AuthService>,
+  userController: Symbol('userController') as Token<UserController>,
+};
 
 export const container = new Container();
 
 container.singleton(
-  'db',
+  TOKENS.db,
   () =>
     new Pool({
       /* pg config */
     }),
 );
-container.singleton('userRepository', () => new UserRepository(container.resolve('db')));
-container.singleton('userService', () => new UserService(container.resolve('userRepository')));
-container.singleton('authService', () => new AuthService(container.resolve('userRepository')));
-container.register('userController', () => new UserController(container.resolve('userService')));
+container.singleton(TOKENS.userRepository, () => new UserRepository(container.resolve(TOKENS.db)));
+container.singleton(
+  TOKENS.userService,
+  () => new UserService(container.resolve(TOKENS.userRepository)),
+);
+container.singleton(
+  TOKENS.authService,
+  () => new AuthService(container.resolve(TOKENS.userRepository)),
+);
+container.register(
+  TOKENS.userController,
+  () => new UserController(container.resolve(TOKENS.userService)),
+);
 ```

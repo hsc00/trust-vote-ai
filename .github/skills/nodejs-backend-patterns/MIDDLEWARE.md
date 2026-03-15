@@ -140,6 +140,7 @@ export class ConflictError extends AppError {
 
 // middleware/error-handler.ts
 import { Request, Response, NextFunction } from 'express';
+import { logger } from './logger.middleware';
 
 export const errorHandler = (err: Error, req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof AppError)

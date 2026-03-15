@@ -7,7 +7,7 @@
 
 ```typescript
 // jwt.strategy.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, SetMetadata } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: config.get('JWT_SECRET'),
+      secretOrKey: config.getOrThrow<string>('JWT_SECRET'),
     });
   }
 
@@ -78,8 +78,11 @@ export class RolesGuard implements CanActivate {
     ]);
     if (!roles) return true;
 
-    const { user } = context.switchToHttp().getRequest();
-    return roles.includes(user.role);
+    const req = context.switchToHttp().getRequest();
+    if (!req || !req.user) {
+      return false;
+    }
+    return roles.includes(req.user.role);
   }
 }
 

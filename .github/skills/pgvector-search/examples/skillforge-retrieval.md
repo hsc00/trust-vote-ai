@@ -118,21 +118,15 @@ async def embed_text(text: str) -> list[float]:
 ### 2. Chunk Repository (Hybrid Search)
 
 ```python
-# backend/app/db/repositories/chunk_repository.py
-from templates.chunk_repository import ChunkRepository
-
-# See: .claude/skills/pgvector-search/templates/chunk-repository.py
-# for full implementation
+# Implementation based on .github/skills/pgvector-search/templates/chunk-repository.py
+from app.db.repositories.chunk_repository import ChunkRepository
 ```
 
 ### 3. Search Service
 
 ```python
-# backend/app/shared/services/search/search_service.py
-from templates.search_service import SearchService
-
-# See: .claude/skills/pgvector-search/templates/search-service.py
-# for full implementation
+# Implementation based on .github/skills/pgvector-search/templates/search-service.py
+from backend.app.shared.services.search.search_service import SearchService
 ```
 
 ### 4. API Endpoint

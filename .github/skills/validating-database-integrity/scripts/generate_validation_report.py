@@ -9,7 +9,7 @@ including statistics, identified issues, trend analysis, and recommendations.
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -39,7 +39,7 @@ class ValidationReportGenerator:
             self.results = data.get("validations", [])
             self.metadata = {
                 "table": data.get("table", "unknown"),
-                "timestamp": data.get("timestamp", datetime.now().isoformat()),
+                "timestamp": data.get("timestamp", datetime.now(timezone.utc).isoformat()),
                 "statistics": data.get("statistics", {})
             }
 
@@ -119,7 +119,7 @@ class ValidationReportGenerator:
         report = {
             "metadata": self.metadata,
             "summary": summary,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "validations": self.results
         }
 
@@ -129,16 +129,17 @@ class ValidationReportGenerator:
         """Generate Markdown report."""
         summary = self.generate_summary()
 
+
         md = []
-        md.append(f"# Data Validation Report")
+        md.append("# Data Validation Report")
         md.append(f"\n**Table:** {self.metadata.get('table', 'Unknown')}")
-        md.append(f"**Generated:** {datetime.now().isoformat()}")
+        md.append(f"**Generated:** {datetime.now(timezone.utc).isoformat()}")
         md.append("")
 
         # Summary section
         md.append("## Executive Summary\n")
-        md.append(f"| Metric | Value |")
-        md.append(f"|--------|-------|")
+        md.append("| Metric | Value |")
+        md.append("|--------|-------|")
         md.append(f"| Total Checks | {summary['total']} |")
         md.append(f"| Passed | {summary['passed']} |")
         md.append(f"| Failed | {summary['failed']} |")
@@ -159,23 +160,26 @@ class ValidationReportGenerator:
 
             if summary['critical_issues'] > 0:
                 md.append("### Critical Issues\n")
-                for issue in summary['issues']:
-                    if issue['severity'] == 'critical':
-                        md.append(f"- **{issue['rule']}** on column `{issue['column']}`")
+                md.extend([
+                    f"- **{issue['rule']}** on column `{issue['column']}`"
+                    for issue in summary['issues'] if issue['severity'] == 'critical'
+                ])
                 md.append("")
 
             if summary['high_issues'] > 0:
                 md.append("### High Priority Issues\n")
-                for issue in summary['issues']:
-                    if issue['severity'] == 'high':
-                        md.append(f"- **{issue['rule']}** on column `{issue['column']}`")
+                md.extend([
+                    f"- **{issue['rule']}** on column `{issue['column']}`"
+                    for issue in summary['issues'] if issue['severity'] == 'high'
+                ])
                 md.append("")
 
             if summary['medium_issues'] > 0:
                 md.append("### Medium Priority Issues\n")
-                for issue in summary['issues']:
-                    if issue['severity'] == 'medium':
-                        md.append(f"- **{issue['rule']}** on column `{issue['column']}`")
+                md.extend([
+                    f"- **{issue['rule']}** on column `{issue['column']}`"
+                    for issue in summary['issues'] if issue['severity'] == 'medium'
+                ])
                 md.append("")
 
         # Detailed results
@@ -254,9 +258,9 @@ class ValidationReportGenerator:
             "</head>",
             "<body>",
             "<div class='container'>",
-            f"<h1>Data Validation Report</h1>",
+            "<h1>Data Validation Report</h1>",
             f"<p><strong>Table:</strong> {self.metadata.get('table', 'Unknown')}</p>",
-            f"<p><strong>Generated:</strong> {datetime.now().isoformat()}</p>"
+            f"<p><strong>Generated:</strong> {datetime.now(timezone.utc).isoformat()}</p>"
         ]
 
         # Summary metrics

@@ -6,7 +6,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 ### 1. Attack Tree Structure
 
-```
+```text
                     [Root Goal]
                          |
             ┌────────────┴────────────┐
@@ -114,7 +114,7 @@ class AttackNode:
         if self.node_type == NodeType.OR:
             return min(child_difficulties)
         else:  # AND
-            return max(child_difficulties)
+            return sum(child_difficulties)
 
     def calculate_path_cost(self) -> float:
         """Calculate aggregate cost for this path."""
@@ -670,4 +670,3 @@ class AttackPathAnalyzer:
 
 - [Attack Trees by Bruce Schneier](https://www.schneier.com/academic/archives/1999/12/attack_trees.html)
 - [MITRE ATT&CK Framework](https://attack.mitre.org/)
-- [OWASP Attack Surface Analysis](https://owasp.org/www-community/controls/Attack_Surface_Analysis_Cheat_Sheet)

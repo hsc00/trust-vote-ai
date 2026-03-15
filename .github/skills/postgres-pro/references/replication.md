@@ -187,7 +187,7 @@ FROM pg_stat_subscription;
 
 ## Cascading Replication
 
-```
+```text
 Primary -> Standby1 -> Standby2
 ```
 
@@ -389,8 +389,12 @@ recovery_target_time = '2024-12-01 14:30:00'
 # Start PostgreSQL (will recover to target)
 systemctl start postgresql
 
+
 # After recovery, check
-SELECT pg_is_in_recovery();  # Should be false after recovery completes
+```
+
+```sql
+SELECT pg_is_in_recovery();  -- Should be false after recovery completes
 ```
 
 ## Monitoring Best Practices

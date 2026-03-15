@@ -32,7 +32,7 @@ def create_directory_structure(base_path):
         full_path.mkdir(parents=True, exist_ok=True)
         print(f"✅ Created: {full_path}")
 
-def create_test_execution_tracking(base_path, project_name):
+def create_test_execution_tracking(base_path):
     """Create TEST-EXECUTION-TRACKING.csv with headers."""
     csv_path = base_path / "tests/docs/templates/TEST-EXECUTION-TRACKING.csv"
 
@@ -460,7 +460,7 @@ def main():
     create_directory_structure(base_path)
 
     # Create tracking files
-    create_test_execution_tracking(base_path, project_name)
+    create_test_execution_tracking(base_path)
     create_bug_tracking_template(base_path)
 
     # Create documentation
@@ -470,11 +470,11 @@ def main():
     create_readme(base_path, project_name)
 
     print(f"\n✅ QA Project '{project_name}' initialized successfully!")
-    print(f"\n📝 Next Steps:")
+    print("\n📝 Next Steps:")
     print(f"   1. Review {base_path}/tests/docs/README.md")
-    print(f"   2. Fill in BASELINE-METRICS.md with current project state")
-    print(f"   3. Write test cases in category-specific documents")
-    print(f"   4. Start testing with MASTER-QA-PROMPT.md")
+    print("   2. Fill in BASELINE-METRICS.md with current project state")
+    print("   3. Write test cases in category-specific documents")
+    print("   4. Start testing with MASTER-QA-PROMPT.md")
 
 if __name__ == "__main__":
     main()

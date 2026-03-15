@@ -28,7 +28,7 @@ You work only on infrastructure and pipeline slices delegated by `TrustVote Orch
 1. Inspect workflow and infra definitions before editing.
 2. Apply least-risk changes with explicit version intent.
 3. Validate via relevant commands (lint, tests, build) and workflow logic checks.
-4. Preserve secure-by-default patterns (`npm ci --ignore-scripts` style pipelines where applicable).
+4. Preserve secure-by-default patterns (`npm ci --ignore-scripts`-style pipelines where applicable).
 
 ## Handoff Back To Orchestrator
 

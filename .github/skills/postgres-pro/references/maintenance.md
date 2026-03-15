@@ -168,8 +168,8 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 -- Unused indexes
 SELECT
   schemaname,
-  tablename,
-  indexname,
+  relname,
+  indexrelname,
   idx_scan,
   pg_size_pretty(pg_relation_size(indexrelid)) as index_size
 FROM pg_stat_user_indexes
@@ -415,9 +415,9 @@ FROM pg_stat_user_tables
 ORDER BY age(relfrozenxid) DESC
 LIMIT 20;
 
--- Prevent wraparound: VACUUM FREEZE
-VACUUM FREEZE;  -- All databases
+VACUUM FREEZE;  -- Current database
 VACUUM FREEZE users;  -- Specific table
+-- To freeze all databases, use: vacuumdb --all --freeze
 ```
 
 ## Maintenance Checklist

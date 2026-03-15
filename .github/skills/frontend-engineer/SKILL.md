@@ -23,7 +23,8 @@ Comprehensive guide for modern React development, emphasizing Suspense-based dat
 
 ### New Component Checklist
 
-- [ ] Use `React.FC<Props>` pattern with TypeScript
+- [ ] Use plain typed function components as the default (e.g., `function Button(props: Props) { ... }` or `const Button = (props: Props) => ...`)
+- [ ] `React.FC<Props>` is optional and may be used if the team explicitly prefers it, but is not required
 - [ ] Lazy load if heavy component: `React.lazy(() => import())`
 - [ ] Wrap in `<SuspenseLoader>` for loading states
 - [ ] Use `useSuspenseQuery` for data fetching

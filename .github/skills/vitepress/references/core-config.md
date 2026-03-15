@@ -96,10 +96,10 @@ export default defineConfig({
 ```ts
 export default defineConfig({
   appearance: true, // Enable toggle (default)
-  appearance: 'dark', // Dark by default
-  appearance: 'force-dark', // Always dark, no toggle
-  appearance: 'force-auto', // Always follow system preference
-  appearance: false, // Disable dark mode
+  // appearance: 'dark', // Dark by default
+  // appearance: 'force-dark', // Always dark, no toggle
+  // appearance: 'force-auto', // Always follow system preference
+  // appearance: false, // Disable dark mode
 });
 ```
 

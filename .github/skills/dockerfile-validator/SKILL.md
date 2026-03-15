@@ -54,22 +54,25 @@ This skill validates Dockerfiles using a **single self-contained script** (`dock
 
 **Single command to validate any Dockerfile:**
 
-```bash
+````bash
 bash scripts/dockerfile-validate.sh Dockerfile
-```
+.gitignore
 
 The script automatically checks for hadolint and Checkov, installs them temporarily in Python venvs if needed, runs all 4 validation stages, then cleans up on exit.
 
 ## Validation Workflow
 
-The `dockerfile-validate.sh` script runs a comprehensive 4-stage validation:
 
-1. **Auto-Install (if needed)** — Check for hadolint and Checkov; install in Python venvs if absent; set flag to trigger cleanup on exit via bash trap
-2. **[1/4] Syntax Validation (hadolint)** — Dockerfile syntax checking, instruction validation, shell script validation via ShellCheck
-3. **[2/4] Security Scan (Checkov)** — Security policy validation, hardcoded secret detection, port exposure checks, USER directive validation
-4. **[3/4] Best Practices Validation (custom)** — Base image tag validation, non-root USER enforcement, HEALTHCHECK presence, layer efficiency, package cache cleanup, COPY ordering
-5. **[4/4] Optimization Analysis (custom)** — Base image size analysis, multi-stage build opportunities, layer count, .dockerignore check, build structure recommendations
-6. **Auto-Cleanup (always runs)** — Remove temp venvs on exit (success, failure, Ctrl+C, or error)
+The `dockerfile-validate.sh` script runs a comprehensive validation workflow:
+
+- **Auto-Install (if needed)** — Check for hadolint and Checkov; install in Python venvs if absent; set flag to trigger cleanup on exit via bash trap
+
+1. **Syntax Validation (hadolint)** — Dockerfile syntax checking, instruction validation, shell script validation via ShellCheck
+2. **Security Scan (Checkov)** — Security policy validation, hardcoded secret detection, port exposure checks, USER directive validation
+3. **Best Practices Validation (custom)** — Base image tag validation, non-root USER enforcement, HEALTHCHECK presence, layer efficiency, package cache cleanup, COPY ordering
+4. **Optimization Analysis (custom)** — Base image size analysis, multi-stage build opportunities, layer count, .dockerignore check, build structure recommendations
+
+- **Auto-Cleanup (always runs)** — Remove temp venvs on exit (success, failure, Ctrl+C, or error)
 
 ## Core Capabilities
 
@@ -89,7 +92,7 @@ hadolint --ignore DL3006 --ignore DL3008 Dockerfile
 
 # Using Docker if not installed
 docker run --rm -i hadolint/hadolint < Dockerfile
-```
+````
 
 For the full list of DL-prefixed (hadolint) and SC-prefixed (ShellCheck) rules, see `references/docker_best_practices.md`.
 
@@ -243,7 +246,7 @@ fi
 
 **Common patterns to include:**
 
-```
+```gitignore
 .git
 .gitignore
 .env
@@ -341,7 +344,7 @@ When tools are not installed, the script auto-installs them temporarily. If auto
 
 ### 1. Pre-Validation
 
-- **Read the Dockerfile first** — Use the Read tool to examine the Dockerfile before running validation.
+- **Examine the Dockerfile content first** — Load and review the Dockerfile before running validation.
 
 ### 2. Validation
 
@@ -355,7 +358,7 @@ When tools are not installed, the script auto-installs them temporarily. If auto
   - Medium (layer optimization, version pinning)
   - Low (style, informational)
 
-- **Propose specific fixes** — Use the Read tool to load appropriate reference files before proposing fixes:
+- **Propose specific fixes** — Load appropriate reference files before proposing fixes:
 
   | Issue Type                             | Reference File                        |
   | -------------------------------------- | ------------------------------------- |
@@ -367,14 +370,14 @@ When tools are not installed, the script auto-installs them temporarily. If auto
 
 **Example interaction:**
 
-```
+```text
 User: "Validate my Dockerfile"
 
-1. Read the Dockerfile using Read tool
+1. Examine the Dockerfile content
 2. Run: bash scripts/dockerfile-validate.sh Dockerfile
 3. Review output from all 4 stages
 4. Summarize findings by severity (critical → low)
-5. Use Read tool to load relevant reference files:
+5. Load relevant reference files for inspection:
    - Read references/security_checklist.md (if security issues found)
    - Read references/optimization_guide.md (if optimization issues found)
    - Read references/docker_best_practices.md (if best practice issues found)

@@ -112,6 +112,13 @@ constructor(@Optional() private readonly cache?: CacheService) {}
 
 // Property injection (use sparingly)
 @Inject() private readonly logger: Logger;
+
+// Forward reference injection (for co-located providers)
+// Used when two services (e.g., SecurityService and CryptographyService) are in the same module's providers array
+// Ensures reliable resolution of circular dependencies
+constructor(@Inject(forwardRef(() => CryptographyService)) private readonly crypto: CryptographyService) {}
+
+// See: SecurityService, CryptographyService, forwardRef, Inject
 ```
 
 ## Scope

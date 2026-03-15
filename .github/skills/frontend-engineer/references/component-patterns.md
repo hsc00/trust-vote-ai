@@ -2,7 +2,8 @@
 
 Modern React components use:
 
-- `React.FC<Props>` for type safety
+- Declare function components with explicit prop types (e.g., `function MyComponent(props: Props)` or `const MyComponent: (props: Props) => JSX.Element`) for type safety
+- Using `React.FC<Props>` is optional and acceptable if you want implicit children typing or other React.FC conveniences
 - `React.lazy()` for code splitting
 - SuspenseLoader for loading states
 - Named const + default export pattern

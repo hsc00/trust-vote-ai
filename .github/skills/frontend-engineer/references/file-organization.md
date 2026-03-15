@@ -7,7 +7,7 @@
 
 ## Feature Subdirectories
 
-```
+```plaintext
 features/
   my-feature/
     api/          # API service layer
@@ -23,7 +23,7 @@ Below is the full file tree and sample code for a new `votes` feature, following
 
 ### File Tree
 
-```
+```plaintext
 src/
 ├── features/
 │   └── votes/

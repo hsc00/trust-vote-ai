@@ -71,9 +71,16 @@ export class UsersController {
 ## Nested Routes
 
 ```typescript
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { ParseUUIDPipe } from '@nestjs/common';
+import { CommentsService } from '../comments/comments.service';
+
 @Controller('posts/:postId/comments')
 @ApiTags('comments')
 export class CommentsController {
+  constructor(private readonly commentsService: CommentsService) {}
+
   @Get()
   findAll(@Param('postId', ParseUUIDPipe) postId: string) {
     return this.commentsService.findByPost(postId);

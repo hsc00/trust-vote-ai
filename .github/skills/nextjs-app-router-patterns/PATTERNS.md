@@ -2,6 +2,8 @@
 
 ## Layout with Metadata
 
+> **Note:** The following pattern requires Next.js 15+ (Oct 2024) and the async cookies() API. The use of `cookieStore`, `sessionId`, `cookies()`, and `redirect()` in this example depends on the newer runtime and will not work on earlier Next.js versions.
+
 ```typescript
 // app/layout.tsx
 import { Inter } from 'next/font/google'
@@ -25,20 +27,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ## Server Component Data Fetching
 
+> **Note:** The following pattern is compatible with Next.js 14. For Next.js 15+, you may use the async/awaitable searchParams signature.
+
 ```typescript
 // app/products/page.tsx
-export default async function ProductsPage({
+export default function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; sort?: 'price' | 'name' | 'date'; page?: string }>
+  searchParams: { category?: string; sort?: 'price' | 'name' | 'date'; page?: string }
 }) {
-  const params = await searchParams
-
   return (
     <div className="flex gap-8">
       <FilterSidebar />
-      <Suspense key={JSON.stringify(params)} fallback={<ProductListSkeleton />}>
-        <ProductList category={params.category} sort={params.sort} page={Number(params.page) || 1} />
+      <Suspense key={JSON.stringify(searchParams)} fallback={<ProductListSkeleton />}>
+        <ProductList category={searchParams.category} sort={searchParams.sort} page={Number(searchParams.page) || 1} />
       </Suspense>
     </div>
   )
@@ -97,7 +99,8 @@ export async function addToCart(productId: string) {
 
     revalidateTag('cart');
     return { success: true };
-  } catch {
+  } catch (err) {
+    console.error('Failed to add item to cart', err);
     return { error: 'Failed to add item to cart' };
   }
 }
@@ -134,17 +137,38 @@ export async function checkoutWithRollback(formData: FormData) {
     revalidateTag('cart');
     revalidateTag('orders');
     redirect(`/orders/${order.id}/confirmation`);
-  } catch {
-    return { error: 'Checkout failed, no changes were committed' };
+  } catch (err) {
+    console.error(
+      'Checkout failed:',
+      err instanceof Error ? err.message : err,
+      err instanceof Error ? err.stack : '',
+    );
+    return {
+      error: 'Checkout failed, no changes were committed',
+      details: err instanceof Error ? err.message : String(err),
+    };
   }
 }
 
+// Minimal example for illustration; in production, import or define processOrder and add error handling as in checkoutWithRollback above.
 export async function checkout(formData: FormData) {
   const address = formData.get('address') as string;
   const payment = formData.get('payment') as string;
   if (!address || !payment) return { error: 'Missing required fields' };
-  const order = await processOrder({ address, payment });
-  redirect(`/orders/${order.id}/confirmation`);
+  try {
+    const order = await processOrder({ address, payment });
+    if (!order || !order.id) {
+      return { error: 'Order creation failed' };
+    }
+    redirect(`/orders/${order.id}/confirmation`);
+  } catch (err) {
+    console.error(
+      'Checkout failed:',
+      err instanceof Error ? err.message : err,
+      err instanceof Error ? err.stack : '',
+    );
+    return { error: 'Checkout failed', details: err instanceof Error ? err.message : String(err) };
+  }
 }
 ```
 

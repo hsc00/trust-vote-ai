@@ -440,7 +440,6 @@ async def retrieve_and_rerank(query: str, k: int = 5) -> list[Document]:
 ### 4. Cohere Rerank
 
 ```python
-from langchain.retrievers import CohereRerank
 from langchain_cohere import CohereRerank
 
 reranker = CohereRerank(model="rerank-english-v3.0", top_n=5)
@@ -603,6 +602,8 @@ Before deploying a RAG system to production, follow this workflow to ensure corr
 - Continuously monitor for retrieval failures, hallucinations, or irrelevant results.
 
 This workflow helps catch issues early and ensures robust, reliable RAG deployments.
+
+## Troubleshooting
 
 - **Poor Retrieval**: Check embedding quality, chunk size, query formulation
 - **Irrelevant Results**: Add metadata filtering, use hybrid search, rerank

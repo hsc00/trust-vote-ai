@@ -35,16 +35,16 @@ def calculate_metrics(csv_path):
     # Priority analysis
     priority_counts = Counter([t['Priority'] for t in tests if t['Priority']])
 
-    print(f"\n{'='*60}")
-    print(f"QA METRICS DASHBOARD")
-    print(f"{'='*60}\n")
+    print("\n" + "="*60)
+    print("QA METRICS DASHBOARD")
+    print("="*60 + "\n")
 
-    print(f"📊 TEST EXECUTION")
+    print("📊 TEST EXECUTION")
     print(f"   Total Tests:     {total}")
     print(f"   Executed:        {executed} ({execution_rate:.1f}%)")
     print(f"   Not Started:     {total - executed}\n")
 
-    print(f"✅ TEST RESULTS")
+    print("✅ TEST RESULTS")
     print(f"   Passed:          {passed}")
     print(f"   Failed:          {failed}")
     print(f"   Pass Rate:       {pass_rate:.1f}%\n")
@@ -58,11 +58,33 @@ def calculate_metrics(csv_path):
         count = priority_counts.get(priority, 0)
         print(f"   {priority}:              {count}")
 
-    print(f"\n🎯 QUALITY GATES")
+    print("\n🎯 QUALITY GATES")
+    import re
+    def has_p0_bug(test):
+        bug_id = test.get('Bug ID', '')
+        notes = test.get('Notes', '')
+        if not isinstance(notes, str):
+            notes = ''
+        return (
+            isinstance(bug_id, str) and bug_id.startswith('BUG') and
+            re.search(r'\bP0\b', notes, re.IGNORECASE)
+        )
+
     gates = {
         "Test Execution ≥100%": execution_rate >= 100,
         "Pass Rate ≥80%": pass_rate >= 80,
-        "P0 Bugs = 0": len([t for t in tests if t['Bug ID'].startswith('BUG') and 'P0' in t['Notes']]) == 0,
+        "P0 Bugs = 0": not any(has_p0_bug(t) for t in tests),
+        "No Open P1 Bugs": not any(
+            (t.get('Bug ID', '').startswith('BUG') and re.search(r'\bP1\b', str(t.get('Notes', '')), re.IGNORECASE))
+            for t in tests
+        ),
+        "No Blocked Tests": not any(
+            (str(t.get('Status', '')).lower() == 'blocked') for t in tests
+        ),
+        "All Required Tests Present": all(
+            t.get('Required', '').lower() != 'yes' or str(t.get('Status', '')).lower() in {'pass', 'fail', 'blocked'}
+            for t in tests
+        ),
     }
 
     for gate, status in gates.items():

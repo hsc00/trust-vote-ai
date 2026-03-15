@@ -9,18 +9,18 @@ VitePress uses file-based routing where markdown files map directly to HTML page
 
 ## File to URL Mapping
 
-```
+````text
 .
 ├─ index.md           →  /index.html (/)
 ├─ about.md           →  /about.html
 ├─ guide/
 │  ├─ index.md        →  /guide/index.html (/guide/)
 │  └─ getting-started.md → /guide/getting-started.html
-```
+```text
 
 ## Project Structure
 
-```
+```text
 .
 ├─ docs                    # Project root
 │  ├─ .vitepress          # VitePress directory
@@ -32,7 +32,7 @@ VitePress uses file-based routing where markdown files map directly to HTML page
 │  ├─ index.md            # Home page
 │  └─ guide/
 │     └─ intro.md
-```
+```text
 
 ## Source Directory
 
@@ -43,7 +43,7 @@ Separate source files from project root:
 export default {
   srcDir: './src', // Markdown files live in ./src/
 };
-```
+````
 
 With `srcDir: 'src'`:
 

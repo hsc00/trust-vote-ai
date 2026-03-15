@@ -70,7 +70,7 @@ pip install psycopg[binary]
 Run with:
 
 ```bash
-set DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 python pg_query_example.py
 ```
 
@@ -137,12 +137,12 @@ Why this is the safe pattern:
 
 ## Security Headers
 
-```
+```http
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
 Strict-Transport-Security: max-age=31536000
 Content-Security-Policy: default-src 'self'
+Referrer-Policy: strict-origin-when-cross-origin
 ```
 
 ## Rate Limiting

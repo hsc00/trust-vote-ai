@@ -25,7 +25,7 @@ Caching, query optimization, load balancing, and scaling strategies.
 
 ### Redis Caching
 
-- 90% database load reduction
+- Can achieve up to 90% database load reduction (varies by workload and cache hit rate)
 - Sub-millisecond latency
 - Use for session storage, rate limiting, leaderboards
 - Set appropriate TTLs
@@ -37,7 +37,7 @@ Caching, query optimization, load balancing, and scaling strategies.
 - Add indexes to frequently queried columns
 - Composite indexes for multi-column queries
 - Monitor index usage
-- 30% I/O reduction with proper indexing
+- Typical I/O reduction ~30% with proper indexing (actual results depend on query patterns and schema)
 
 ### Query Optimization
 
@@ -49,7 +49,7 @@ Caching, query optimization, load balancing, and scaling strategies.
 ### Connection Pooling
 
 - Reuse database connections
-- 5-10x performance boost
+- May see 5–10x performance improvement in some workloads (pooling impact varies by application and DB)
 - Configure pool size based on load
 - Monitor connection usage
 
@@ -93,7 +93,7 @@ Caching, query optimization, load balancing, and scaling strategies.
 
 ## CDN (Content Delivery Network)
 
-- 50%+ latency reduction
+- Up to 50%+ latency reduction (CDN impact depends on asset type, geography, and cache effectiveness)
 - Cache static assets at edge
 - Reduce origin server load
 - Global distribution

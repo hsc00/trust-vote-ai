@@ -8,6 +8,12 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../utils/errors';
 
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET environment variable is not set');
+  return secret;
+}
+
 interface JWTPayload {
   userId: string;
   email: string;
@@ -26,7 +32,7 @@ export const authenticate = async (req: Request, _res: Response, next: NextFunct
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) throw new UnauthorizedError('No token provided');
-    req.user = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    req.user = jwt.verify(token, getJwtSecret()) as JWTPayload;
     next();
   } catch {
     next(new UnauthorizedError('Invalid token'));
@@ -61,9 +67,17 @@ export class AuthService {
       throw new UnauthorizedError('Invalid credentials');
 
     return {
-      token: this.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET!, '15m'),
-      refreshToken: this.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET!, '7d'),
-      user: { id: user.id, name: user.name, email: user.email },
+      token: this.sign(
+        { userId: user.id, email: user.email, roles: user.roles },
+        getJwtSecret(),
+        '15m',
+      ),
+      refreshToken: this.sign(
+        { userId: user.id, roles: user.roles },
+        process.env.REFRESH_TOKEN_SECRET!,
+        '7d',
+      ),
+      user: { id: user.id, name: user.name, email: user.email, roles: user.roles },
     };
   }
 
@@ -75,7 +89,7 @@ export class AuthService {
       const user = await this.userRepository.findById(userId);
       if (!user) throw new UnauthorizedError('User not found');
       return {
-        token: this.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET!, '15m'),
+        token: this.sign({ userId: user.id, email: user.email }, getJwtSecret(), '15m'),
       };
     } catch {
       throw new UnauthorizedError('Invalid refresh token');
@@ -131,6 +145,7 @@ export class RolesGuard implements CanActivate {
 }
 
 // decorators
+import { SetMetadata, createParamDecorator, ExecutionContext } from '@nestjs/common';
 export const Public = () => SetMetadata('isPublic', true);
 export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 export const CurrentUser = createParamDecorator(

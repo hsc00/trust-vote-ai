@@ -11,12 +11,12 @@ Generate many pages from a single markdown file and dynamic data. Useful for blo
 
 Create a template file with parameter in brackets and a paths loader:
 
-```
+````text
 .
 └─ packages/
    ├─ [pkg].md           # Route template
    └─ [pkg].paths.js     # Paths loader
-```
+```text
 
 The paths loader exports a `paths` method returning route parameters:
 
@@ -27,7 +27,7 @@ export default {
     return [{ params: { pkg: 'foo' } }, { params: { pkg: 'bar' } }, { params: { pkg: 'baz' } }];
   },
 };
-```
+````
 
 Generated pages:
 

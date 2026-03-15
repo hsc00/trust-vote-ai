@@ -58,7 +58,9 @@ fastify.post<{ Body: { name: string; email: string } }>(
       },
     },
   },
-  async (req) => ({ id: crypto.randomUUID(), name: req.body.name }),
+  // Add at the top of your file:
+  // import { randomUUID } from 'node:crypto';
+  async (req) => ({ id: randomUUID(), name: req.body.name }),
 );
 
 await fastify.listen({ port: +(process.env.PORT ?? 3000), host: '0.0.0.0' });
