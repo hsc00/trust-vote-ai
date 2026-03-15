@@ -9,13 +9,33 @@
 
 ---
 
+## Agentic Workflow & Orchestrator Model
+
+TrustVote AI uses an **agentic workflow** for all feature delivery and engineering changes. This model is built around a central **Orchestrator** agent that owns end-to-end delivery, delegating work to specialist agents for each domain:
+
+- **Backend Engineer:** Handles NestJS/Fastify backend, API, and service logic.
+- **Frontend Engineer:** Manages Next.js dashboard, UI, and client verification flows.
+- **Data and AI Engineer:** Owns schema, migrations, embeddings, and RAG/persistence.
+- **QA and Quality Engineer:** Drives testing, coverage, regression, and quality gates.
+- **DevSecOps Engineer:** Maintains CI/CD, Docker, dependency security, and release hardening.
+- **Security Engineer:** Performs threat modeling, cryptographic and auth hardening, and security reviews.
+- **Docs and ADR Engineer:** Updates documentation, ADRs, and engineering logs.
+- **Research Engineer:** Evaluates libraries, explores RAG strategies, and provides technical recommendations.
+
+The **Orchestrator** triages requests, routes work to the right agent, and integrates all changes, enforcing quality, security, and documentation standards before completion. This ensures:
+
+- Consistent, production-safe delivery across all packages.
+- Clear separation of concerns and domain expertise.
+- Automated quality gates (lint, test, SonarCloud) before merging.
+- End-to-end traceability and auditability for every change.
+
 ## Architecture & Infrastructure
 
 The project follows a **Monorepo** pattern using **NPM Workspaces**, ensuring consistency across the entire ecosystem.
 
 - `packages/docs`: Technical documentation and Architectural Decision Records (VitePress).
-- `packages/backend`: NestJS API Core (Cryptographic Engine & Persistence Layer).
-- `packages/frontend`: Next.js Audit Dashboard (React 19+).
+- `packages/backend`: NestJS API Core (In progress).
+- `packages/frontend`: Next.js Audit Dashboard (React 19+ / Compiler Enabled).
 
 ### Security & Quality Stack
 

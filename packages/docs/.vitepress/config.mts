@@ -67,6 +67,10 @@ export default defineConfig({
             text: '13. Shared Cryptographic Logic',
             link: '/architecture/13-shared-cryptography-logic',
           },
+          {
+            text: '14. Agentic Workflow & Orchestrator Model',
+            link: '/architecture/14-agentic-workflow-orchestrator',
+          },
         ],
       },
       {
