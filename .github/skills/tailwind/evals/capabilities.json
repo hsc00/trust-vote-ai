@@ -1,0 +1,48 @@
+{
+  "package_name": "tailwind",
+  "total_capabilities": 6,
+  "capabilities": [
+    {
+      "id": 0,
+      "name": "utility-first",
+      "description": "Use Tailwind utility classes; avoid long @apply chains; avoid inline styles for values Tailwind can express (e.g. use w-4 h-4 not style)",
+      "complexity": "basic",
+      "api_elements": ["utility classes", "@apply sparingly", "no inline styles for layout/size"]
+    },
+    {
+      "id": 1,
+      "name": "theme-tokens",
+      "description": "Use theme values (e.g. rounded-lg, text-sm, bg-gray-100) instead of arbitrary values unless design requires one-off",
+      "complexity": "basic",
+      "api_elements": ["theme tokens", "avoid arbitrary values for repeated patterns"]
+    },
+    {
+      "id": 2,
+      "name": "responsive",
+      "description": "Mobile-first responsive design using sm:, md:, lg: prefixes; base classes for smallest viewport",
+      "complexity": "intermediate",
+      "api_elements": ["responsive prefixes", "mobile-first"]
+    },
+    {
+      "id": 3,
+      "name": "interaction-states",
+      "description": "Apply hover, focus, and disabled states with Tailwind classes (hover:, focus:, focus-visible:, disabled:) for interactive elements",
+      "complexity": "basic",
+      "api_elements": ["hover:", "focus:ring", "disabled:opacity-50"]
+    },
+    {
+      "id": 4,
+      "name": "dark-mode",
+      "description": "Use dark: prefix for backgrounds and text when supporting dark mode",
+      "complexity": "basic",
+      "api_elements": ["dark:bg-", "dark:text-"]
+    },
+    {
+      "id": 5,
+      "name": "config",
+      "description": "Extend theme in tailwind.config (e.g. theme.extend.colors); ensure content includes template/component paths",
+      "complexity": "intermediate",
+      "api_elements": ["theme.extend", "content array"]
+    }
+  ]
+}

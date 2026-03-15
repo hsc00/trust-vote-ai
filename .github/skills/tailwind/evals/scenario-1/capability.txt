@@ -1,0 +1,1 @@
+Tailwind utility-first, theme tokens, responsive, interaction states, dark mode
