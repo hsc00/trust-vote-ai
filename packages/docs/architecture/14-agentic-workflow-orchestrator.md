@@ -1,4 +1,4 @@
-# ADR 13: Agentic Workflow & Orchestrator Model
+# Agentic Workflow & Orchestrator Model
 
 ## Context
 
