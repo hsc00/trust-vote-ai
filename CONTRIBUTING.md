@@ -36,11 +36,12 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 ## Pull Request Process
 
 1.  **Sync**: Ensure your branch is up to date with `develop` or `main`.
-2.  **Quality Gate**: Our CI/CD pipeline runs automatically on every PR.
+2.  **Template**: Complete the repository PR template in full. Do not leave placeholders or sections blank; use `N/A` when needed.
+3.  **Quality Gate**: Our CI/CD pipeline runs automatically on every PR.
     - **Linting**: Code must pass the linting rules.
     - **Tests**: All tests must pass.
     - **SonarCloud**: The Quality Gate **requires at least 80% code coverage** on new code.
-3.  **Feedback**: SonarCloud will comment directly on your PR with metrics and issues. Please resolve all comments before requesting a final review.
+4.  **Feedback**: SonarCloud will comment directly on your PR with metrics and issues. Please resolve all comments before requesting a final review.
 
 ## Testing Standards
 
