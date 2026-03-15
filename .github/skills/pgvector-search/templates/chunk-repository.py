@@ -308,7 +308,7 @@ async def example_usage():
             print(f"  Content: {chunk.content[:100]}...")
 
         # 2. Filter by content type
-        code_results = await repo.hybrid_search(
+        await repo.hybrid_search(
             query,
             embedding,
             top_k=5,
@@ -316,7 +316,7 @@ async def example_usage():
         )
 
         # 3. Similarity threshold
-        high_quality_results = await repo.hybrid_search(
+        await repo.hybrid_search(
             query,
             embedding,
             top_k=10,
