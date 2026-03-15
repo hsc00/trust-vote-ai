@@ -1,7 +1,5 @@
 # Dependency Security Remediation
 
-**Date:** 2026-03-15
-
 ## Summary
 
 This session remediated high-severity dependency findings in the monorepo lockfile.

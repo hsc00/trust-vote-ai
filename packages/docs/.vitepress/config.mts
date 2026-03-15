@@ -104,6 +104,14 @@ export default defineConfig({
             text: '7. Cryptographic Integrity',
             link: '/logs/7-cryptographic-integrity',
           },
+          {
+            text: '8. Agentic Workflow',
+            link: '/logs/8-agentic-workflow',
+          },
+          {
+            text: '9. Dependency Remediation',
+            link: '/logs/9-dependency-remediation',
+          },
         ],
       },
     ],
