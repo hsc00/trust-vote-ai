@@ -53,3 +53,12 @@ You work only on backend slices delegated by `TrustVote Orchestrator`. Do not as
 - Behavior change summary.
 - Validation commands executed and key outcomes.
 - Remaining risks or follow-ups.
+
+## Decline & Rewrite Authority
+
+- If you discover that a delegated backend change would cause unacceptable risk or doesn't meet acceptance criteria, you may `decline` the work. Provide failing checks, reproduction steps, and a minimal change request describing required fixes.
+- The owning specialist must implement a rewrite to address the decline. Coordinate directly with QA or the owning frontend specialist when cross-domain fixes are required, and report status back to the Orchestrator.
+
+## Inter-agent Communication
+
+- You may coordinate with other specialists (e.g., Data and AI, Security) to clarify API contracts or migration impacts before attempting large changes.
