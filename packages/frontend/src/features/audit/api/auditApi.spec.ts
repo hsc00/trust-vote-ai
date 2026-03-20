@@ -1,8 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, afterAll, describe, expect, it, vi } from 'vitest';
 import { fetchVoteAudit } from './auditApi';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
+
+beforeAll(() => {
+  process.env.API_URL = 'http://localhost:3000';
+});
 
 describe('fetchVoteAudit', () => {
   const voteId = '550e8400-e29b-41d4-a716-446655440000';
@@ -20,6 +24,11 @@ describe('fetchVoteAudit', () => {
 
   beforeEach(() => {
     mockFetch.mockReset();
+  });
+
+  afterAll(() => {
+    vi.unstubAllGlobals();
+    delete process.env.API_URL;
   });
 
   it('returns audit data on success', async () => {

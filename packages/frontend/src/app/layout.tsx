@@ -32,7 +32,7 @@ export default function RootLayout({
 
         <footer className="border-t border-zinc-800 py-8">
           <p className="text-center text-xs text-zinc-600">
-            TrustVote · Official verification · © 2026
+            TrustVote · Official verification · © {new Date().getFullYear()}
           </p>
         </footer>
       </body>

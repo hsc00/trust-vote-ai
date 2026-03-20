@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { VoteVerifier } from '@/features/audit';
 
 export const metadata: Metadata = {
@@ -36,14 +35,7 @@ export default async function Page() {
         </p>
       </div>
 
-      {/* Verifier */}
-      <Suspense
-        fallback={
-          <div className="h-20 rounded-xl border border-zinc-800 bg-zinc-900 animate-pulse" />
-        }
-      >
-        <VoteVerifier />
-      </Suspense>
+      <VoteVerifier />
 
       {/* Section divider */}
       <hr className="border-zinc-800" />

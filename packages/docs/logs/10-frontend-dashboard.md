@@ -34,7 +34,7 @@ Phase 1 established the cryptographic audit proof pipeline: votes are hashed, ch
 
 ### App Shell
 
--- `app/layout.tsx` — Root layout updated with TrustVote branding, dark zinc colour theme, and a footer.
+- `app/layout.tsx` — Root layout updated with TrustVote branding, dark zinc colour theme, and a footer.
 
 - `app/page.tsx` — Dashboard page containing: hero section describing the audit system, `<VoteVerifier>` form, and a "How it works" explainer section.
 
@@ -48,7 +48,7 @@ Phase 1 established the cryptographic audit proof pipeline: votes are hashed, ch
 
 Test strategy followed the project's existing Vitest pattern and Google Testing Standards:
 
-- **`features/audit/api/auditApi.spec.ts`** — 5 unit tests. Covers `fetchHealth` and `fetchVoteAudit` across: successful fetch with typed response, non-OK HTTP status (throws), response body parse error (throws), and missing body. Uses `vi.fn()` to mock global `fetch`.
+- **`features/audit/api/auditApi.spec.ts`** — 5 unit tests. Covers `fetchVoteAudit` across: successful fetch with typed response, non-OK HTTP status (throws), response body parse error (throws), and missing body. Uses `vi.fn()` to mock global `fetch`.
 - **`features/audit/api/auditActions.spec.ts`** — 3 unit tests. Covers `verifyVoteAction`: success path returning `AuditVerifyResponse`, `Error` instance propagated as `{ error: message }`, and non-Error throw normalised to a fallback string.
 
 Frontend Vitest infrastructure was added in this session:
