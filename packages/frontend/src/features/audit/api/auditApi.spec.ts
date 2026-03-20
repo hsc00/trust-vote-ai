@@ -19,7 +19,7 @@ describe('fetchVoteAudit', () => {
     proof: [{ position: 'left' as const, hash: 'sibling-hash' }],
     merkleRoot: 'root-hash',
     timestamp: '2024-01-01T00:00:00.000Z',
-    algorithm: 'sha3-256',
+    algorithm: 'SHA3-512',
   };
 
   beforeEach(() => {
