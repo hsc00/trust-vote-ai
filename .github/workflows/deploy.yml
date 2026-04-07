@@ -39,7 +39,7 @@ jobs:
         run: npm run test:backend
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@0303d6b62e310685c0e34d0b9cde218036885c4d
+        uses: SonarSource/sonarqube-scan-action@f099b441665cb71b0414100cfaf6d835492cee5f
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
