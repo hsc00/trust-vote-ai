@@ -66,7 +66,7 @@ jobs:
         run: npm ci --ignore-scripts && npm rebuild esbuild
       - run: npm run docs:build
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: packages/docs/.vitepress/dist
 
