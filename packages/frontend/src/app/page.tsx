@@ -30,8 +30,8 @@ export default async function Page() {
       <div className="space-y-3">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-100">Verify your vote</h1>
         <p className="max-w-2xl text-zinc-400">
-          Your vote is protected by a tamper-proof digital lock. Enter your Vote ID to confirm it
-          was received and recorded exactly as you intended.
+          Your vote is protected by a digital lock. Enter your Vote ID to confirm it was received
+          and recorded exactly as you intended.
         </p>
       </div>
 
