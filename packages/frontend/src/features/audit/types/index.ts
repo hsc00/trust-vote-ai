@@ -1,8 +1,3 @@
-export interface HealthResponse {
-  status: string;
-  timestamp: string;
-}
-
 export interface MerkleStep {
   position: 'left' | 'right';
   hash: string;
