@@ -30,7 +30,6 @@ Audit for accessibility: @$1
 - **2.1.1** All functionality available via keyboard
 - **2.4.3** Logical focus order
 - **2.4.7** Visible focus indicator
-- **2.5.5** Touch target >= 44x44 CSS pixels
 
 ### Understandable
 
@@ -130,7 +129,7 @@ If **design assets** are provided or a design tool connector is available:
 - Inspect color values, font sizes, and touch targets directly from the provided design assets or generated visuals
 - Check component ARIA roles and keyboard behavior in the design spec (if available)
 
-If **~~project tracker** is connected:
+If **project tracker** is connected:
 
 - Create tickets for each accessibility finding with severity and WCAG criterion
 - Link findings to existing accessibility remediation epics

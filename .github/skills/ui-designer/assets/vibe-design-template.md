@@ -47,11 +47,12 @@
 - 为 PRD 中的每个 Feature 设计多个方案，Feature 应该纵向排列，方案应该横向排列，确保排版准确
 - 如果有移动端的页面设计 3 个解决方案
 - 如有有 web 端页面设计 2 个解决方案
-- 每个页面单独作为一个组件，放到 [方案名称]/pages/[页面名称].jsx 文件下，每个方案都一个方案描述方便后续查找组件
+- 每个页面单独作为一个组件，放到 [solution-name]/pages/[page-name].jsx 文件下，每个方案都一个方案描述方便后续查找组件
 - 最终所有效果汇聚到一个页面上展示
 </task>
 
 <output>
-Place your output in an index.html file and make sure it’s hooked in properly to App.js
+Each page should be implemented as a React component under [solution-name]/pages/[page-name].jsx.
+All page components should be aggregated and rendered via the app entry (e.g. App.js) so the final preview is a single React route/page that imports and displays each component.
 </output>
 </context>

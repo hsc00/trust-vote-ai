@@ -14,7 +14,7 @@ try {
 
   const branchRegex = new RegExp(String.raw`^(${typesRegex})\/[a-z0-9._-]+$`);
 
-  const isProtectedBranch = branch === 'main' || branch === 'develop';
+  const isProtectedBranch = branch === 'master' || branch === 'develop' || branch === 'agents';
 
   if (!isProtectedBranch && !branchRegex.test(branch)) {
     console.error(`Error: Invalid branch name -> '${branch}'`);
