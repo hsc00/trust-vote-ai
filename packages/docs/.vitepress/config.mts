@@ -112,6 +112,10 @@ export default defineConfig({
             text: '9. Dependency Remediation',
             link: '/logs/9-dependency-remediation',
           },
+          {
+            text: '10. Frontend Dashboard',
+            link: '/logs/10-frontend-dashboard',
+          },
         ],
       },
     ],

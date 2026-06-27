@@ -54,3 +54,10 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 ---
 
 _“In cryptography and democracy, we trust. In code quality, we verify.”_
+
+## Local Development
+
+- Backend dev server: `http://localhost:3000` (default NestJS port). Start from `packages/backend`.
+- Frontend dev server: `http://localhost:3001` (default Next.js dev port used in this repo). Start from `packages/frontend`.
+
+If you change ports, update `packages/frontend/.env.example` and the `dev` scripts accordingly.

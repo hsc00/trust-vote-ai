@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "outDir": "dist",
+    "rootDir": "src",
     "sourceMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

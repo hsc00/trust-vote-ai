@@ -30,6 +30,7 @@ export default mergeConfig(
           '**/drizzle/**',
           '**/*.dto.ts',
           '**/*.entity.ts',
+          'packages/frontend/**',
         ],
         thresholds: {
           lines: 100,
