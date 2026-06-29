@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.55.0",
-    "@typescript-eslint/parser": "^8.57.1",
+    "@typescript-eslint/parser": "^8.62.1",
     "@vitest/coverage-v8": "^4.0.18",
     "drizzle-kit": "^0.31.9",
     "eslint": "^9.39.2",
