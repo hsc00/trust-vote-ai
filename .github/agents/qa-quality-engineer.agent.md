@@ -53,3 +53,12 @@ You work only on QA and review slices delegated by `TrustVote Orchestrator`. Do 
 - Coverage/test updates.
 - Commands run and key results.
 - Residual risk and follow-up actions.
+
+## Decline & Rewrite Authority
+
+- The QA specialist may `decline` a delivered slice when tests or quality gates fail or the feature introduces unacceptable risk. A decline must include: failing checks, reproduction steps, and a minimal change request.
+- When QA declines a frontend or backend slice, the owning specialist should implement a rewrite addressing the decline. QA and the owning specialist should coordinate directly to validate the rewrite; once resolved, escalate the outcome back to the Orchestrator.
+
+## Inter-agent Communication
+
+- QA may communicate directly with implementers to reproduce issues and to co-design minimal fixes. Keep messages short and include clear reproduction steps and test cases.
