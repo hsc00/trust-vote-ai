@@ -4,6 +4,14 @@ export default defineConfig({
   base: '/trust-vote-ai/',
   title: 'TrustVote AI',
   description: 'High-Integrity Decision Engine',
+  vite: {
+    build: {
+      target: 'esnext',
+    },
+    esbuild: {
+      target: 'esnext',
+    },
+  },
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
