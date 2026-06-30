@@ -26,7 +26,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/coverage-v8": "^4.1.9",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
+    "eslint": "^10.0.0",
     "eslint-config-next": "16.2.9",
     "jsdom": "^29.0.0",
     "tailwindcss": "^4",
