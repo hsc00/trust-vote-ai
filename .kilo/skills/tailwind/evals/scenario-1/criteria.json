@@ -1,0 +1,32 @@
+{
+  "context": "Tests whether the agent applies Tailwind CSS per skill: utility-first styling, theme tokens, responsive prefixes, hover/focus states, and dark mode support.",
+  "type": "weighted_checklist",
+  "capability_tested": "utility-first, theme-tokens, responsive, interaction-states, dark-mode",
+  "checklist": [
+    {
+      "name": "Utility classes only",
+      "description": "Markup uses Tailwind utility classes. No @apply used, OR at most one short @apply block for a single repeated variant. Long @apply chains or custom CSS for layout/spacing/typography fail.",
+      "max_score": 25
+    },
+    {
+      "name": "Theme tokens not arbitrary",
+      "description": "Uses theme token class names for spacing, type, radius (e.g. rounded-lg, text-sm, p-4, gray-*) rather than arbitrary values (e.g. w-[13px], text-[14px]) for standard patterns.",
+      "max_score": 25
+    },
+    {
+      "name": "Responsive prefixes",
+      "description": "At least one responsive prefix (sm:, md:, lg:, xl:, or 2xl:) appears for layout, spacing, or typography.",
+      "max_score": 20
+    },
+    {
+      "name": "Hover and focus states",
+      "description": "Interactive elements (buttons or clickable areas) include at least one of: hover: class, focus: or focus-visible: class.",
+      "max_score": 15
+    },
+    {
+      "name": "Dark mode variants",
+      "description": "At least one dark: class present for background and/or text (e.g. dark:bg-gray-800, dark:text-gray-200).",
+      "max_score": 15
+    }
+  ]
+}

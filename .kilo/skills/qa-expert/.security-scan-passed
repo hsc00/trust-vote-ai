@@ -1,0 +1,6 @@
+# Security scan result
+
+scanned_at: "2025-11-10T01:04:27.457659Z"
+tool: "gitleaks + pattern-based validation"
+content_hash: "285963ff8755c043176531839cd549a80bebebaf1d9bcdd21628234d0c5d6246"
+commit_sha: "fb5529c5cb7fa70519a3630f70939cac896e90fa"

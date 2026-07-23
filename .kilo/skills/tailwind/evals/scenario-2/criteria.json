@@ -1,0 +1,17 @@
+{
+  "context": "Tests whether the agent configures Tailwind per skill: custom theme tokens and content paths so component files are scanned.",
+  "type": "weighted_checklist",
+  "capability_tested": "config",
+  "checklist": [
+    {
+      "name": "Custom color in theme",
+      "description": "tailwind.config extends theme with a custom color for the brand (e.g. theme.extend.colors.primary or theme.extend.colors.brand) set to #0EA5E9 or equivalent. Color must be in theme/theme.extend, not only in arbitrary class.",
+      "max_score": 50
+    },
+    {
+      "name": "Content includes components",
+      "description": "content array in config includes paths that would match React component files (e.g. './src/**/*.{js,ts,jsx,tsx}', './components/**/*.jsx', or similar). A content array that only matches index.html or has no component glob fails.",
+      "max_score": 50
+    }
+  ]
+}
