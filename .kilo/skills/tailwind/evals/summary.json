@@ -1,0 +1,25 @@
+{
+  "total_scenarios": 2,
+  "capabilities_coverage": {
+    "total_capabilities": 6,
+    "capabilities_tested": 6,
+    "coverage_percentage": 100
+  },
+  "complexity_distribution": {
+    "basic": 4,
+    "intermediate": 2,
+    "advanced": 0
+  },
+  "scenarios": [
+    {
+      "index": 1,
+      "capability": "utility-first, theme-tokens, responsive, interaction-states, dark-mode",
+      "complexity": "basic, intermediate"
+    },
+    {
+      "index": 2,
+      "capability": "config",
+      "complexity": "intermediate"
+    }
+  ]
+}
