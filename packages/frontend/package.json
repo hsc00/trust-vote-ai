@@ -24,7 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.0",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@vitest/coverage-v8": "^5.0.0",
     "@rolldown/pluginutils": "^1.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^10.0.0",
@@ -32,6 +32,6 @@
     "jsdom": "^29.0.0",
     "tailwindcss": "^4",
     "typescript": "^6.0.0",
-    "vitest": "^4.1.0"
+    "vitest": "^5.0.0"
   }
 }
